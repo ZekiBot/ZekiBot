@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Link } from "wouter";
-import { useAuth } from "@/hooks/useAuth";
-import { usePoints } from "@/context/PointsContext";
+// import { useAuth } from "@/context/AuthContext";
 import LoginModal from "@/components/auth/LoginModal";
 import RegisterModal from "@/components/auth/RegisterModal";
 import {
@@ -13,9 +12,19 @@ import {
 import { Button } from "@/components/ui/button";
 import { User, LogOut, Settings, History, Code, Image, MessageSquare, Gamepad2, List } from "lucide-react";
 
+// Mock auth data for development - remove in production
+const mockAuth = {
+  isAuthenticated: true,
+  user: { username: "Test", isAdmin: true },
+  logout: () => console.log("Logout clicked"),
+  isAdmin: true,
+  points: 100
+};
+
 const Header = () => {
-  const { isAuthenticated, user, logout, isAdmin } = useAuth();
-  const { points } = usePoints();
+  // Temporary development mock - remove in production
+  const { isAuthenticated, user, logout, isAdmin, points } = mockAuth;
+  
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -56,24 +65,24 @@ const Header = () => {
             {/* Navigation for desktop */}
             <nav className="hidden md:flex items-center space-x-6">
               <Link href="/">
-                <a className="text-light hover:text-accent transition-colors font-medium">
+                <span className="text-light hover:text-accent transition-colors font-medium cursor-pointer">
                   Ana Sayfa
-                </a>
+                </span>
               </Link>
               <Link href="/#features">
-                <a className="text-light hover:text-accent transition-colors font-medium">
+                <span className="text-light hover:text-accent transition-colors font-medium cursor-pointer">
                   Özellikler
-                </a>
+                </span>
               </Link>
               <Link href="/sohbet">
-                <a className="text-light hover:text-accent transition-colors font-medium">
+                <span className="text-light hover:text-accent transition-colors font-medium cursor-pointer">
                   Sohbet
-                </a>
+                </span>
               </Link>
               <Link href="/gorsel-olustur">
-                <a className="text-light hover:text-accent transition-colors font-medium">
+                <span className="text-light hover:text-accent transition-colors font-medium cursor-pointer">
                   Görsel Oluştur
-                </a>
+                </span>
               </Link>
             </nav>
 
@@ -146,67 +155,67 @@ const Header = () => {
           <div className="md:hidden bg-dark-surface border-t border-dark-lighter px-4 py-2">
             <nav className="flex flex-col space-y-3 py-2">
               <Link href="/">
-                <a
-                  className="text-light hover:text-accent transition-colors font-medium py-2"
+                <span
+                  className="text-light hover:text-accent transition-colors font-medium py-2 cursor-pointer block"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Ana Sayfa
-                </a>
+                </span>
               </Link>
               <Link href="/#features">
-                <a
-                  className="text-light hover:text-accent transition-colors font-medium py-2"
+                <span
+                  className="text-light hover:text-accent transition-colors font-medium py-2 cursor-pointer block"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Özellikler
-                </a>
+                </span>
               </Link>
               <Link href="/sohbet">
-                <a
-                  className="text-light hover:text-accent transition-colors font-medium py-2"
+                <span
+                  className="text-light hover:text-accent transition-colors font-medium py-2 cursor-pointer block"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   <MessageSquare className="w-4 h-4 inline mr-2" />
                   Sohbet
-                </a>
+                </span>
               </Link>
               <Link href="/gorsel-olustur">
-                <a
-                  className="text-light hover:text-accent transition-colors font-medium py-2"
+                <span
+                  className="text-light hover:text-accent transition-colors font-medium py-2 cursor-pointer block"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   <Image className="w-4 h-4 inline mr-2" />
                   Görsel Oluştur
-                </a>
+                </span>
               </Link>
               <Link href="/oyunlar">
-                <a
-                  className="text-light hover:text-accent transition-colors font-medium py-2"
+                <span
+                  className="text-light hover:text-accent transition-colors font-medium py-2 cursor-pointer block"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   <Gamepad2 className="w-4 h-4 inline mr-2" />
                   Oyunlar
-                </a>
+                </span>
               </Link>
               <Link href="/kod-yazma">
-                <a
-                  className="text-light hover:text-accent transition-colors font-medium py-2"
+                <span
+                  className="text-light hover:text-accent transition-colors font-medium py-2 cursor-pointer block"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   <Code className="w-4 h-4 inline mr-2" />
                   Kod Yazma
-                </a>
+                </span>
               </Link>
               {isAuthenticated && (
                 <>
                   <Link href="/profil">
-                    <a
-                      className="text-light hover:text-accent transition-colors font-medium py-2"
+                    <span
+                      className="text-light hover:text-accent transition-colors font-medium py-2 cursor-pointer block"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       <User className="w-4 h-4 inline mr-2" />
                       Profilim
-                    </a>
+                    </span>
                   </Link>
                   <div className="flex items-center text-accent py-2">
                     <i className="fas fa-coins mr-1"></i>

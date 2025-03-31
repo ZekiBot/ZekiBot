@@ -5,6 +5,15 @@ import { queryClient } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
 import { useLocation } from 'wouter';
 
+// Mock User Data - Remove this in production
+const MOCK_USER = {
+  id: 1,
+  username: "testuser",
+  email: "test@example.com",
+  points: 100,
+  isAdmin: true
+};
+
 // Define types
 export type User = {
   id: number;
@@ -35,17 +44,29 @@ export type AuthContextType = {
   isClaimingBonus: boolean;
 };
 
+// Create the auth context
 export const AuthContext = createContext<AuthContextType | null>(null);
 
+// Provider component
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [points, setPoints] = useState<number>(0); 
   const { toast } = useToast();
   const [, setLocation] = useLocation();
+
+  // Derived state
   const isAdmin = user?.isAdmin || false;
   const isAuthenticated = !!user;
 
-  // Auth status query
+  // For development, set a mock user - Remove in production
+  useEffect(() => {
+    // Comment this out when API is ready
+    setUser(MOCK_USER);
+    setPoints(MOCK_USER.points);
+  }, []);
+
+  // Auth status query - comment this in when API is ready
+  /*
   const { data: authData, isLoading: isAuthLoading } = useQuery<User | null>({
     queryKey: ['/api/auth/status'],
     retry: false,
@@ -59,33 +80,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setPoints(authData.points);
     }
   }, [authData]);
+  */
+  const isAuthLoading = false; // Mock for now
 
-  // Query for user points
-  const { data: pointsData, isLoading: isPointsLoading } = useQuery<{points: number}>({
-    queryKey: ['/api/user/points'],
-    enabled: isAuthenticated,
-    initialData: {points: 0}
-  });
+  // Simplified mock query for points
+  const isPointsLoading = false;
+  const isTransactionsLoading = false;
+  const transactionsData: any[] = [];
 
-  // Query for transactions history
-  const { data: transactionsData, isLoading: isTransactionsLoading } = useQuery<any[]>({
-    queryKey: ['/api/user/transactions'],
-    enabled: isAuthenticated,
-    initialData: []
-  });
-
-  // Effect to update points from API
-  useEffect(() => {
-    if (pointsData) {
-      setPoints(pointsData.points);
-    }
-  }, [pointsData]);
-
-  // Register mutation
+  // Simplified register function
   const register = useMutation({
     mutationFn: async (credentials: { username: string; email: string; password: string }) => {
-      const res = await apiRequest('POST', '/api/auth/register', credentials);
-      return res.json();
+      // Mock implementation
+      console.log("Register called with:", credentials);
+      return MOCK_USER;
     },
     onSuccess: (data) => {
       setUser(data);
@@ -104,11 +112,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   });
 
-  // Login mutation
+  // Simplified login function
   const login = useMutation({
     mutationFn: async (credentials: { email: string; password: string }) => {
-      const res = await apiRequest('POST', '/api/auth/login', credentials);
-      return res.json();
+      // Mock implementation
+      console.log("Login called with:", credentials);
+      return MOCK_USER;
     },
     onSuccess: (data) => {
       setUser(data);
@@ -127,11 +136,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   });
 
-  // Logout mutation
+  // Simplified logout function
   const logout = useMutation({
     mutationFn: async () => {
-      const res = await apiRequest('POST', '/api/auth/logout');
-      return res.json();
+      // Mock implementation
+      console.log("Logout called");
+      return { success: true };
     },
     onSuccess: () => {
       setUser(null);
@@ -150,17 +160,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   });
 
-  // Daily bonus mutation
+  // Simplified daily bonus function
   const dailyBonus = useMutation({
     mutationFn: async () => {
-      const res = await apiRequest('POST', '/api/user/daily-bonus');
-      return res.json();
+      // Mock implementation
+      console.log("Daily bonus claimed");
+      return { success: true };
     },
     onSuccess: () => {
-      // Invalidate queries to refresh data
-      queryClient.invalidateQueries({ queryKey: ['/api/user/points'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/user/transactions'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/auth/status'] });
+      // Mock points update
+      setPoints(prev => prev + 5);
       
       toast({
         title: "Günlük Bonus!",
@@ -202,7 +211,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 }
 
-// Custom hook for accessing the auth context
+// Export the useAuth hook to be used throughout the application
 export function useAuth() {
   const context = useContext(AuthContext);
   if (!context) {

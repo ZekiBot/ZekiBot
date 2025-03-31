@@ -9,11 +9,13 @@ import Dashboard from "@/pages/Dashboard";
 import Admin from "@/pages/Admin";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import { useAuth } from "@/hooks/useAuth";
-import { PointsProvider } from "@/context/PointsContext";
+import { useAuth } from "@/context/AuthContext";
+import { Toaster } from "@/components/ui/toaster";
 
 function Router() {
-  const { user, isAdmin } = useAuth();
+  // Temporary mock data for development - remove in production
+  const user = { id: 1, username: "Test", points: 100, isAdmin: true }; 
+  const isAdmin = true;
 
   return (
     <Switch>
@@ -31,16 +33,14 @@ function Router() {
 
 function App() {
   return (
-    // Wrap everything in PointsProvider since it depends on AuthProvider which is higher up in main.tsx
-    <PointsProvider>
-      <div className="flex flex-col min-h-screen bg-dark text-light font-inter">
-        <Header />
-        <main className="flex-grow">
-          <Router />
-        </main>
-        <Footer />
-      </div>
-    </PointsProvider>
+    <div className="flex flex-col min-h-screen bg-dark text-light font-inter">
+      <Header />
+      <main className="flex-grow">
+        <Router />
+      </main>
+      <Footer />
+      <Toaster />
+    </div>
   );
 }
 

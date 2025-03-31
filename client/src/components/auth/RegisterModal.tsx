@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
-import { useAuth } from "@/hooks/useAuth";
+// import { useAuth } from "@/hooks/useAuth";
 import { X, Loader2 } from "lucide-react";
 
 interface RegisterModalProps {
@@ -21,7 +21,11 @@ const RegisterModal = ({ isOpen, onClose, onLoginClick }: RegisterModalProps) =>
   const [confirmPassword, setConfirmPassword] = useState("");
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [passwordError, setPasswordError] = useState("");
-  const { register, isRegistering } = useAuth();
+  // Mock for development - remove in production
+  const register = (credentials: { username: string; email: string; password: string }) => {
+    console.log("Register with:", credentials);
+  };
+  const isRegistering = false;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

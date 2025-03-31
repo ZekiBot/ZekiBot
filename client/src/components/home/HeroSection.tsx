@@ -2,13 +2,14 @@ import { useState } from "react";
 import { Link } from "wouter";
 import LoginModal from "@/components/auth/LoginModal";
 import RegisterModal from "@/components/auth/RegisterModal";
-import { useAuth } from "@/hooks/useAuth";
+// import { useAuth } from "@/hooks/useAuth";
 import { SendHorizontal } from "lucide-react";
 
 const HeroSection = () => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
-  const { isAuthenticated } = useAuth();
+  // Mock for development - remove in production
+  const isAuthenticated = false;
 
   const handleFreeStart = () => {
     if (isAuthenticated) {
@@ -35,9 +36,9 @@ const HeroSection = () => {
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
                 <Link href="#features">
-                  <a className="bg-primary hover:bg-opacity-90 text-white font-medium px-6 py-3 rounded-lg text-center transition-colors">
+                  <span className="bg-primary hover:bg-opacity-90 text-white font-medium px-6 py-3 rounded-lg text-center transition-colors inline-block cursor-pointer">
                     Keşfet
-                  </a>
+                  </span>
                 </Link>
                 <button
                   onClick={handleFreeStart}

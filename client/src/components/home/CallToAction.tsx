@@ -1,13 +1,14 @@
 import { useState } from "react";
 import RegisterModal from "@/components/auth/RegisterModal";
 import LoginModal from "@/components/auth/LoginModal";
-import { useAuth } from "@/hooks/useAuth";
+// import { useAuth } from "@/hooks/useAuth";
 import { Link } from "wouter";
 
 const CallToAction = () => {
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const { isAuthenticated } = useAuth();
+  // Mock for development - remove in production
+  const isAuthenticated = false;
 
   const handleStart = () => {
     if (isAuthenticated) {
@@ -43,9 +44,9 @@ const CallToAction = () => {
                   Ücretsiz Başla
                 </button>
                 <Link href="#features">
-                  <a className="bg-transparent border border-primary text-primary hover:bg-primary hover:bg-opacity-10 font-medium px-8 py-4 rounded-lg text-lg transition-colors">
+                  <span className="bg-transparent border border-primary text-primary hover:bg-primary hover:bg-opacity-10 font-medium px-8 py-4 rounded-lg text-lg transition-colors inline-block cursor-pointer">
                     Daha Fazla Bilgi
-                  </a>
+                  </span>
                 </Link>
               </div>
               <p className="text-light-muted text-sm mt-6">

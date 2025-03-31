@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
-import { useAuth } from "@/hooks/useAuth";
+// import { useAuth } from "@/hooks/useAuth";
 import { X, Loader2 } from "lucide-react";
 
 interface LoginModalProps {
@@ -18,7 +18,11 @@ const LoginModal = ({ isOpen, onClose, onRegisterClick }: LoginModalProps) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
-  const { login, isLoggingIn } = useAuth();
+  // Mock for development - remove in production
+  const login = (credentials: { email: string; password: string }) => {
+    console.log("Login with:", credentials);
+  };
+  const isLoggingIn = false;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
