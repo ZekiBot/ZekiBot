@@ -29,6 +29,7 @@ export const chatMessages = pgTable("chat_messages", {
   userId: integer("user_id").notNull(),
   message: text("message").notNull(),
   response: text("response").notNull(),
+  modelType: text("model_type").default("openai"),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
@@ -36,6 +37,7 @@ export const insertChatMessageSchema = createInsertSchema(chatMessages).pick({
   userId: true,
   message: true,
   response: true,
+  modelType: true,
 });
 
 // Image generations table
@@ -60,6 +62,7 @@ export const codeGenerations = pgTable("code_generations", {
   prompt: text("prompt").notNull(),
   code: text("code").notNull(),
   language: text("language").notNull(),
+  modelType: text("model_type").default("openai"),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
@@ -68,6 +71,7 @@ export const insertCodeGenerationSchema = createInsertSchema(codeGenerations).pi
   prompt: true,
   code: true,
   language: true,
+  modelType: true,
 });
 
 // Points transactions table

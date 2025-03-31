@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { usePoints } from "@/context/PointsContext";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { generateCode, getCodeHistory } from "@/lib/openai";
+import { generateCode, getCodeHistory, getAvailableModels, AIModel } from "@/lib/openai";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -32,8 +32,14 @@ import {
   TabsList, 
   TabsTrigger 
 } from "@/components/ui/tabs";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Helmet } from "react-helmet";
-import { Code, Loader2, Terminal, Info, Clipboard, CheckCircle2 } from "lucide-react";
+import { Code, Loader2, Terminal, Info, Clipboard, CheckCircle2, Cpu } from "lucide-react";
 import LoginModal from "@/components/auth/LoginModal";
 import { useToast } from "@/hooks/use-toast";
 
@@ -63,7 +69,14 @@ const CodeAssistant = () => {
   const [language, setLanguage] = useState("javascript");
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [copiedId, setCopiedId] = useState<number | null>(null);
+  const [selectedModel, setSelectedModel] = useState("openai");
   const queryClient = useQueryClient();
+
+  // Fetch AI models
+  const { data: models } = useQuery({
+    queryKey: ['/api/ai-models'],
+    queryFn: getAvailableModels
+  });
 
   // Fetch code history
   const { data: codeHistory, isLoading: isLoadingHistory } = useQuery({
@@ -73,9 +86,9 @@ const CodeAssistant = () => {
   });
 
   // Handle code generation
-  const { mutate: createCode, isPending: isGenerating } = useMutation({
-    mutationFn: (data: { prompt: string, language: string }) => 
-      generateCode(data.prompt, data.language),
+  const { mutate: createCodeMutation, isPending: isGenerating } = useMutation({
+    mutationFn: (data: { prompt: string, language: string, modelType: string }) => 
+      generateCode(data.prompt, data.language, data.modelType),
     onSuccess: () => {
       setPrompt("");
       queryClient.invalidateQueries({ queryKey: ['/api/code/history'] });
@@ -83,6 +96,18 @@ const CodeAssistant = () => {
       queryClient.invalidateQueries({ queryKey: ['/api/auth/status'] });
     }
   });
+  
+  // Wrapper function to generate code
+  const createCode = (prompt: string, language: string) => {
+    createCodeMutation({ prompt, language, modelType: selectedModel });
+  };
+  
+  // Get current model point cost
+  const getCurrentModelCost = () => {
+    if (!models) return 8;
+    const model = models.find((m: AIModel) => m.id === selectedModel);
+    return model?.pointCost || 8;
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -93,11 +118,13 @@ const CodeAssistant = () => {
       return;
     }
     
-    if (points < 8) {
+    const modelCost = getCurrentModelCost();
+    
+    if (points < modelCost) {
       return;
     }
     
-    createCode({ prompt, language });
+    createCode(prompt, language);
   };
 
   const copyToClipboard = (text: string, id: number) => {
@@ -145,7 +172,7 @@ const CodeAssistant = () => {
                     value={prompt}
                     onChange={(e) => setPrompt(e.target.value)}
                     className="h-32 mt-2 bg-dark-lighter border-dark-lighter focus:border-primary text-light"
-                    disabled={isGenerating || !isAuthenticated || points < 8}
+                    disabled={isGenerating || !isAuthenticated || points < getCurrentModelCost()}
                   />
                 </div>
                 <div>
@@ -153,7 +180,7 @@ const CodeAssistant = () => {
                   <Select
                     value={language}
                     onValueChange={setLanguage}
-                    disabled={isGenerating || !isAuthenticated || points < 8}
+                    disabled={isGenerating || !isAuthenticated || points < getCurrentModelCost()}
                   >
                     <SelectTrigger id="language" className="mt-2 bg-dark-lighter border-dark-lighter text-light">
                       <SelectValue placeholder="Dil seçin" />
@@ -170,7 +197,7 @@ const CodeAssistant = () => {
                   <Button 
                     type="submit" 
                     className="w-full mt-4 bg-primary hover:bg-primary/90"
-                    disabled={isGenerating || !prompt.trim() || !isAuthenticated || points < 8}
+                    disabled={isGenerating || !prompt.trim() || !isAuthenticated || points < getCurrentModelCost()}
                   >
                     {isGenerating ? (
                       <>
@@ -187,19 +214,64 @@ const CodeAssistant = () => {
                 </div>
               </div>
 
-              {isAuthenticated && points < 8 && (
+              {isAuthenticated && models && (
+                <div className="mb-3">
+                  <div className="text-sm text-light-muted mb-1">Model Seçimi:</div>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                    {models.filter((model: AIModel) => model.supportsCode).map((model: AIModel) => (
+                      <TooltipProvider key={model.id}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              variant={selectedModel === model.id ? "default" : "outline"}
+                              className={`flex items-center justify-between ${
+                                selectedModel === model.id 
+                                  ? "bg-primary hover:bg-primary/90" 
+                                  : "bg-dark-lighter hover:bg-dark-lighter/90"
+                              } text-sm h-auto py-2`}
+                              onClick={() => setSelectedModel(model.id)}
+                              disabled={!model.supportsCode}
+                            >
+                              <div className="flex items-center">
+                                <Cpu className="h-4 w-4 mr-2" />
+                                <span>{model.name}</span>
+                              </div>
+                              <div className="flex items-center gap-1 ml-2">
+                                <span className="text-xs">{model.pointCost}p</span>
+                                {selectedModel === model.id && (
+                                  <CheckCircle2 className="h-3 w-3 text-green-400" />
+                                )}
+                              </div>
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent className="max-w-[250px] p-3">
+                            <p>{model.description}</p>
+                            <p className="text-xs mt-1 font-medium text-accent">{model.pointCost} puan / kod oluşturma</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {isAuthenticated && points < getCurrentModelCost() && (
                 <Alert className="bg-red-900/20 border-red-900">
                   <Info className="h-4 w-4" />
                   <AlertTitle>Yetersiz puan</AlertTitle>
                   <AlertDescription>
-                    Kod oluşturmak için en az 8 puana ihtiyacınız var. Şu anki puanınız: {points}.
+                    Kod oluşturmak için en az {getCurrentModelCost()} puana ihtiyacınız var. Şu anki puanınız: {points}.
                   </AlertDescription>
                 </Alert>
               )}
 
               <div className="text-sm text-light-muted">
                 {isAuthenticated && (
-                  <span>Şu anki puanınız: <span className="text-accent">{points}</span> | Her kod oluşturma: <span className="text-red-400">-8 puan</span></span>
+                  <span>
+                    Şu anki puanınız: <span className="text-accent">{points}</span> | 
+                    Her kod oluşturma: <span className="text-red-400">-{getCurrentModelCost()} puan</span> |
+                    Model: <span className="text-primary">{models?.find((m: AIModel) => m.id === selectedModel)?.name || "OpenAI"}</span>
+                  </span>
                 )}
               </div>
             </form>
@@ -244,8 +316,16 @@ const CodeAssistant = () => {
                     <CardTitle className="text-lg">
                       {codeHistory[0].prompt}
                     </CardTitle>
-                    <CardDescription>
-                      Dil: {LANGUAGES.find(l => l.value === codeHistory[0].language)?.label || codeHistory[0].language}
+                    <CardDescription className="flex flex-col sm:flex-row sm:items-center gap-2">
+                      <span>Dil: {LANGUAGES.find(l => l.value === codeHistory[0].language)?.label || codeHistory[0].language}</span>
+                      {codeHistory[0].modelType && (
+                        <div className="flex items-center text-gray-400">
+                          <Cpu className="h-3 w-3 mr-1" />
+                          <span>
+                            {models?.find((m: AIModel) => m.id === codeHistory[0].modelType)?.name || codeHistory[0].modelType}
+                          </span>
+                        </div>
+                      )}
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
@@ -278,8 +358,16 @@ const CodeAssistant = () => {
                         <CardTitle className="text-md">
                           {code.prompt}
                         </CardTitle>
-                        <CardDescription>
-                          Dil: {LANGUAGES.find(l => l.value === code.language)?.label || code.language}
+                        <CardDescription className="flex flex-col sm:flex-row sm:items-center gap-2">
+                          <span>Dil: {LANGUAGES.find(l => l.value === code.language)?.label || code.language}</span>
+                          {code.modelType && (
+                            <div className="flex items-center text-gray-400">
+                              <Cpu className="h-3 w-3 mr-1" />
+                              <span>
+                                {models?.find((m: AIModel) => m.id === code.modelType)?.name || code.modelType}
+                              </span>
+                            </div>
+                          )}
                         </CardDescription>
                       </CardHeader>
                       <CardContent>

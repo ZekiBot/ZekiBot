@@ -1,8 +1,8 @@
 import { useState } from "react";
-// import { useAuth } from "@/hooks/useAuth";
-// import { usePoints } from "@/context/PointsContext";
+import { useAuth } from "@/hooks/useAuth";
+import { usePoints } from "@/context/PointsContext";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { generateImage, getImageHistory } from "@/lib/openai";
+import { generateImage, getImageHistory, getAvailableModels, AIModel } from "@/lib/openai";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -18,17 +18,29 @@ import {
   AlertTitle,
   AlertDescription 
 } from "@/components/ui/alert";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Helmet } from "react-helmet";
-import { Image as ImageIcon, Loader2, Sparkles, Info } from "lucide-react";
+import { Image as ImageIcon, Loader2, Sparkles, Info, Cpu, CheckCircle2 } from "lucide-react";
 import LoginModal from "@/components/auth/LoginModal";
 
 const ImageGeneration = () => {
-  // Mock data for development - remove in production
-  const isAuthenticated = true;
-  const points = 100;
+  const { isAuthenticated } = useAuth();
+  const { points } = usePoints();
   const [prompt, setPrompt] = useState("");
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [selectedModel, setSelectedModel] = useState("openai");
   const queryClient = useQueryClient();
+
+  // Fetch AI models
+  const { data: models } = useQuery({
+    queryKey: ['/api/ai-models'],
+    queryFn: getAvailableModels
+  });
 
   // Fetch image history
   const { data: imageHistory, isLoading: isLoadingHistory } = useQuery({
@@ -38,8 +50,9 @@ const ImageGeneration = () => {
   });
 
   // Handle image generation
-  const { mutate: createImage, isPending: isGenerating } = useMutation({
-    mutationFn: generateImage,
+  const { mutate: createImageMutation, isPending: isGenerating } = useMutation({
+    mutationFn: (data: { prompt: string, modelType: string }) => 
+      generateImage(data.prompt, data.modelType),
     onSuccess: () => {
       setPrompt("");
       queryClient.invalidateQueries({ queryKey: ['/api/image/history'] });
@@ -47,6 +60,18 @@ const ImageGeneration = () => {
       queryClient.invalidateQueries({ queryKey: ['/api/auth/status'] });
     }
   });
+  
+  // Wrapper function to generate image
+  const createImage = (prompt: string) => {
+    createImageMutation({ prompt, modelType: selectedModel });
+  };
+  
+  // Get current model point cost
+  const getCurrentModelCost = () => {
+    if (!models) return 10;
+    const model = models.find((m: AIModel) => m.id === selectedModel);
+    return model?.pointCost || 10;
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,7 +82,9 @@ const ImageGeneration = () => {
       return;
     }
     
-    if (points < 10) {
+    const modelCost = getCurrentModelCost();
+    
+    if (points < modelCost) {
       return;
     }
     
@@ -87,22 +114,63 @@ const ImageGeneration = () => {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
+              {isAuthenticated && models && (
+                <div className="mb-3">
+                  <div className="text-sm text-light-muted mb-1">Model Seçimi:</div>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                    {models.filter((model: AIModel) => model.supportsImage).map((model: AIModel) => (
+                      <TooltipProvider key={model.id}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              variant={selectedModel === model.id ? "default" : "outline"}
+                              className={`flex items-center justify-between ${
+                                selectedModel === model.id 
+                                  ? "bg-secondary hover:bg-secondary/90" 
+                                  : "bg-dark-lighter hover:bg-dark-lighter/90"
+                              } text-sm h-auto py-2`}
+                              onClick={() => setSelectedModel(model.id)}
+                              disabled={!model.supportsImage}
+                            >
+                              <div className="flex items-center">
+                                <Cpu className="h-4 w-4 mr-2" />
+                                <span>{model.name}</span>
+                              </div>
+                              <div className="flex items-center gap-1 ml-2">
+                                <span className="text-xs">{model.pointCost}p</span>
+                                {selectedModel === model.id && (
+                                  <CheckCircle2 className="h-3 w-3 text-green-400" />
+                                )}
+                              </div>
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent className="max-w-[250px] p-3">
+                            <p>{model.description}</p>
+                            <p className="text-xs mt-1 font-medium text-accent">{model.pointCost} puan / görsel</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               <div>
                 <Textarea
                   placeholder="Görselin açıklamasını yazın... (Örn: 'Deniz kenarında gün batımı')"
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
                   className="h-32 bg-dark-lighter border-dark-lighter focus:border-secondary text-light"
-                  disabled={isGenerating || !isAuthenticated || points < 10}
+                  disabled={isGenerating || !isAuthenticated || points < getCurrentModelCost()}
                 />
               </div>
 
-              {isAuthenticated && points < 10 && (
+              {isAuthenticated && points < getCurrentModelCost() && (
                 <Alert className="bg-red-900/20 border-red-900">
                   <Info className="h-4 w-4" />
                   <AlertTitle>Yetersiz puan</AlertTitle>
                   <AlertDescription>
-                    Görsel oluşturmak için en az 10 puana ihtiyacınız var. Şu anki puanınız: {points}.
+                    Görsel oluşturmak için en az {getCurrentModelCost()} puana ihtiyacınız var. Şu anki puanınız: {points}.
                   </AlertDescription>
                 </Alert>
               )}
@@ -110,13 +178,17 @@ const ImageGeneration = () => {
               <div className="flex justify-between items-center">
                 <div className="text-sm text-light-muted">
                   {isAuthenticated && (
-                    <span>Şu anki puanınız: <span className="text-accent">{points}</span> | Her görsel: <span className="text-red-400">-10 puan</span></span>
+                    <span>
+                      Şu anki puanınız: <span className="text-accent">{points}</span> | 
+                      Her görsel: <span className="text-red-400">-{getCurrentModelCost()} puan</span> |
+                      Model: <span className="text-secondary">{models?.find((m: AIModel) => m.id === selectedModel)?.name || "OpenAI"}</span>
+                    </span>
                   )}
                 </div>
                 <Button 
                   type="submit" 
                   className="bg-secondary hover:bg-secondary/90"
-                  disabled={isGenerating || !prompt.trim() || !isAuthenticated || points < 10}
+                  disabled={isGenerating || !prompt.trim() || !isAuthenticated || points < getCurrentModelCost()}
                 >
                   {isGenerating ? (
                     <>
@@ -176,7 +248,17 @@ const ImageGeneration = () => {
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <p className="text-sm text-light-muted truncate">{image.prompt}</p>
+                    <div className="mt-2">
+                      <p className="text-sm text-light-muted truncate">{image.prompt}</p>
+                      {image.modelType && (
+                        <div className="flex items-center text-xs text-gray-400 mt-1">
+                          <Cpu className="h-3 w-3 mr-1" />
+                          <span>
+                            {models?.find((m: AIModel) => m.id === image.modelType)?.name || image.modelType}
+                          </span>
+                        </div>
+                      )}
+                    </div>
                   </CardContent>
                 </Card>
               ))}

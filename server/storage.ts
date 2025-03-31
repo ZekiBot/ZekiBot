@@ -136,7 +136,8 @@ export class MemStorage implements IStorage {
     const chatMessage: ChatMessage = {
       ...message,
       id,
-      createdAt: now
+      createdAt: now,
+      modelType: message.modelType || "openai"
     };
     
     this.chatMessages.set(id, chatMessage);
@@ -176,7 +177,8 @@ export class MemStorage implements IStorage {
     const codeGeneration: CodeGeneration = {
       ...code,
       id,
-      createdAt: now
+      createdAt: now,
+      modelType: code.modelType || "openai"
     };
     
     this.codeGenerations.set(id, codeGeneration);

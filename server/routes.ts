@@ -15,7 +15,13 @@ import {
 } from "@shared/schema";
 import bcrypt from "bcryptjs";
 import MemoryStore from "memorystore";
-import { processChatMessage, generateCode, generateImage } from "./openai";
+import { 
+  processChatMessage, 
+  generateCode, 
+  generateImage, 
+  AIModelType, 
+  availableModels 
+} from "./ai-services";
 
 const SessionStore = MemoryStore(session);
 
@@ -195,31 +201,41 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json(transactions);
   });
   
+  // Mevcut AI modelleri için endpoint
+  router.get('/ai-models', (req: Request, res: Response) => {
+    res.json(availableModels);
+  });
+  
   // Chat routes
   router.post('/chat', isAuthenticated, hasEnoughPoints(5), async (req: Request, res: Response) => {
     try {
       const user: any = req.user;
-      const { message } = req.body;
+      const { message, modelType = AIModelType.OpenAI } = req.body;
       
       if (!message) {
         return res.status(400).json({ message: 'Mesaj gerekli' });
       }
       
-      // Call OpenAI API
-      const response = await processChatMessage(message);
+      // Modelin puan maliyetini bulma
+      const modelInfo = availableModels.find(model => model.id === modelType);
+      const pointCost = modelInfo?.pointCost || 5;
       
-      // Save chat message
+      // Seçilen modele göre API çağrısı
+      const response = await processChatMessage(message, modelType as AIModelType);
+      
+      // Save chat message with modelType
       const chatMessage = await storage.createChatMessage({
         userId: user.id,
         message,
-        response
+        response,
+        modelType: modelType as string
       });
       
-      // Deduct points
+      // Deduct points based on model cost
       await storage.createPointTransaction({
         userId: user.id,
-        amount: -5,
-        description: 'Sohbet kullanımı'
+        amount: -pointCost,
+        description: `${modelInfo?.name || 'AI'} sohbet kullanımı`
       });
       
       res.json(chatMessage);
@@ -239,14 +255,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
   router.post('/image/generate', isAuthenticated, hasEnoughPoints(10), async (req: Request, res: Response) => {
     try {
       const user: any = req.user;
-      const { prompt } = req.body;
+      const { prompt, modelType = AIModelType.OpenAI } = req.body;
       
       if (!prompt) {
         return res.status(400).json({ message: 'Görsel açıklaması gerekli' });
       }
       
-      // Call OpenAI DALL-E API
-      const imageUrl = await generateImage(prompt);
+      // Modelin puan maliyetini bulma
+      const modelInfo = availableModels.find(model => model.id === modelType);
+      const pointCost = modelInfo?.pointCost || 10;
+      
+      // Modelin görsel desteği var mı kontrol et
+      if (modelInfo && !modelInfo.supportsImage) {
+        return res.status(400).json({ 
+          message: `${modelInfo.name} modeli görsel oluşturmayı desteklemiyor`
+        });
+      }
+      
+      // Şu anda sadece OpenAI görsel desteği var
+      if (modelType !== AIModelType.OpenAI) {
+        return res.status(400).json({ 
+          message: `Görsel oluşturma şu anda sadece OpenAI tarafından desteklenmektedir`
+        });
+      }
+      
+      // Seçilen modele göre API çağrısı
+      const imageUrl = await generateImage(prompt, modelType as AIModelType);
       
       // Save image generation
       const imageGeneration = await storage.createImageGeneration({
@@ -255,11 +289,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         imageUrl
       });
       
-      // Deduct points
+      // Deduct points based on model cost
       await storage.createPointTransaction({
         userId: user.id,
-        amount: -10,
-        description: 'Görsel oluşturma'
+        amount: -pointCost,
+        description: `${modelInfo?.name || 'AI'} görsel oluşturma`
       });
       
       res.json(imageGeneration);
@@ -279,28 +313,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
   router.post('/code/generate', isAuthenticated, hasEnoughPoints(8), async (req: Request, res: Response) => {
     try {
       const user: any = req.user;
-      const { prompt, language } = req.body;
+      const { prompt, language, modelType = AIModelType.OpenAI } = req.body;
       
       if (!prompt || !language) {
         return res.status(400).json({ message: 'Kod açıklaması ve dil seçimi gerekli' });
       }
       
-      // Call OpenAI API for code generation
-      const code = await generateCode(prompt, language);
+      // Modelin puan maliyetini bulma
+      const modelInfo = availableModels.find(model => model.id === modelType);
+      const pointCost = modelInfo?.pointCost || 8;
+      
+      // Modelin kod desteği var mı kontrol et
+      if (modelInfo && !modelInfo.supportsCode) {
+        return res.status(400).json({ 
+          message: `${modelInfo.name} modeli kod üretmeyi desteklemiyor`
+        });
+      }
+      
+      // Seçilen modele göre API çağrısı
+      const code = await generateCode(prompt, language, modelType as AIModelType);
       
       // Save code generation
       const codeGeneration = await storage.createCodeGeneration({
         userId: user.id,
         prompt,
         code,
-        language
+        language,
+        modelType: modelType as string
       });
       
-      // Deduct points
+      // Deduct points based on model cost
       await storage.createPointTransaction({
         userId: user.id,
-        amount: -8,
-        description: 'Kod oluşturma'
+        amount: -pointCost,
+        description: `${modelInfo?.name || 'AI'} kod oluşturma`
       });
       
       res.json(codeGeneration);

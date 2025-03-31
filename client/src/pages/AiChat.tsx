@@ -2,18 +2,31 @@ import { useState, useRef, useEffect } from "react";
 // import { useAuth } from "@/hooks/useAuth";
 // import { usePoints } from "@/context/PointsContext";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { sendChatMessage, getChatHistory } from "@/lib/openai";
+import { sendChatMessage, getChatHistory, getAvailableModels, AIModel } from "@/lib/openai";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { MessageSquare, Send, Loader2, Info } from "lucide-react";
+import { MessageSquare, Send, Loader2, Info, CheckCircle2, Cpu } from "lucide-react";
 import { Helmet } from "react-helmet";
 import { 
   Alert,
   AlertTitle,
   AlertDescription 
 } from "@/components/ui/alert";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import LoginModal from "@/components/auth/LoginModal";
 
 const AiChat = () => {
@@ -22,9 +35,16 @@ const AiChat = () => {
   const isAuthenticated = true;
   const points = 100;
   const [message, setMessage] = useState("");
+  const [selectedModel, setSelectedModel] = useState("openai");
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
+  
+  // Fetch available AI models
+  const { data: models, isLoading: isLoadingModels } = useQuery({
+    queryKey: ['/api/ai-models'],
+    queryFn: getAvailableModels
+  });
 
   // Fetch chat history
   const { data: chatHistory, isLoading: isLoadingHistory } = useQuery({
@@ -34,8 +54,9 @@ const AiChat = () => {
   });
 
   // Handle sending messages
-  const { mutate: sendMessage, isPending: isSending } = useMutation({
-    mutationFn: sendChatMessage,
+  const { mutate: sendMessageMutation, isPending: isSending } = useMutation({
+    mutationFn: (data: {message: string, modelType: string}) => 
+      sendChatMessage(data.message, data.modelType),
     onSuccess: () => {
       setMessage("");
       queryClient.invalidateQueries({ queryKey: ['/api/chat/history'] });
@@ -43,12 +64,24 @@ const AiChat = () => {
       queryClient.invalidateQueries({ queryKey: ['/api/auth/status'] });
     }
   });
+  
+  // Wrapper function to send messages
+  const sendMessage = (message: string, modelType: string) => {
+    sendMessageMutation({message, modelType});
+  };
 
   // Scroll to bottom when new messages arrive
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chatHistory]);
 
+  // Get current model point cost
+  const getCurrentModelCost = () => {
+    if (!models) return 5;
+    const model = models.find((m: AIModel) => m.id === selectedModel);
+    return model?.pointCost || 5;
+  };
+  
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!message.trim()) return;
@@ -58,11 +91,13 @@ const AiChat = () => {
       return;
     }
     
-    if (points < 5) {
+    const modelCost = getCurrentModelCost();
+    
+    if (points < modelCost) {
       return;
     }
     
-    sendMessage(message);
+    sendMessage(message, selectedModel);
   };
 
   return (
@@ -140,6 +175,12 @@ const AiChat = () => {
                             <i className="fas fa-robot text-sm"></i>
                           </div>
                           <div className="bg-dark-lighter rounded-lg p-3 text-light max-w-[80%]">
+                            {chat.modelType && (
+                              <div className="text-xs text-gray-400 mb-1 flex items-center">
+                                <Cpu className="h-3 w-3 mr-1" />
+                                {models?.find((m: AIModel) => m.id === chat.modelType)?.name || chat.modelType}
+                              </div>
+                            )}
                             <p>{chat.response}</p>
                           </div>
                         </div>
@@ -170,6 +211,47 @@ const AiChat = () => {
                 </Alert>
               )}
 
+              {isAuthenticated && models && (
+                <div className="mb-3">
+                  <div className="text-sm text-light-muted mb-1">Model Seçimi:</div>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                    {models.filter((model: AIModel) => model.supportsChat).map((model: AIModel) => (
+                      <TooltipProvider key={model.id}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              variant={selectedModel === model.id ? "default" : "outline"}
+                              className={`flex items-center justify-between ${
+                                selectedModel === model.id 
+                                  ? "bg-primary hover:bg-primary/90" 
+                                  : "bg-dark-lighter hover:bg-dark-lighter/90"
+                              } text-sm h-auto py-2`}
+                              onClick={() => setSelectedModel(model.id)}
+                              disabled={!model.supportsChat}
+                            >
+                              <div className="flex items-center">
+                                <Cpu className="h-4 w-4 mr-2" />
+                                <span>{model.name}</span>
+                              </div>
+                              <div className="flex items-center gap-1 ml-2">
+                                <span className="text-xs">{model.pointCost}p</span>
+                                {selectedModel === model.id && (
+                                  <CheckCircle2 className="h-3 w-3 text-green-400" />
+                                )}
+                              </div>
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent className="max-w-[250px] p-3">
+                            <p>{model.description}</p>
+                            <p className="text-xs mt-1 font-medium text-accent">{model.pointCost} puan / mesaj</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               <form onSubmit={handleSubmit} className="flex gap-2">
                 <Input
                   type="text"
@@ -177,12 +259,12 @@ const AiChat = () => {
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   className="flex-grow bg-dark-lighter border-dark-lighter focus:border-primary text-light"
-                  disabled={isSending || !isAuthenticated || points < 5}
+                  disabled={isSending || !isAuthenticated || points < getCurrentModelCost()}
                 />
                 <Button 
                   type="submit" 
                   className="bg-primary hover:bg-primary/90"
-                  disabled={isSending || !message.trim() || !isAuthenticated || points < 5}
+                  disabled={isSending || !message.trim() || !isAuthenticated || points < getCurrentModelCost()}
                 >
                   {isSending ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
@@ -194,7 +276,11 @@ const AiChat = () => {
 
               {isAuthenticated && (
                 <div className="mt-2 text-right text-sm text-light-muted">
-                  <span>Şu anki puanınız: <span className="text-accent">{points}</span> | Her mesaj: <span className="text-red-400">-5 puan</span></span>
+                  <span>
+                    Şu anki puanınız: <span className="text-accent">{points}</span> | 
+                    Her mesaj: <span className="text-red-400">-{getCurrentModelCost()} puan</span> | 
+                    Model: <span className="text-primary">{models?.find((m: AIModel) => m.id === selectedModel)?.name || "OpenAI"}</span>
+                  </span>
                 </div>
               )}
             </div>
