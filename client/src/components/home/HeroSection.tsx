@@ -101,6 +101,7 @@ const HeroSection = () => {
                       type="text"
                       className="w-full bg-dark-lighter border border-dark-lighter focus:border-primary rounded-lg px-4 py-3 pr-12 text-black"
                       placeholder="Mesajınızı yazın..."
+                      style={{color: "black"}}
                     />
                     <button className="absolute right-3 top-1/2 transform -translate-y-1/2 text-primary hover:text-primary-dark">
                       <SendHorizontal className="h-5 w-5" />

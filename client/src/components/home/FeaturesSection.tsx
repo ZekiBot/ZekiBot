@@ -37,8 +37,8 @@ const FeaturesSection = () => {
           {/* Feature 1: AI Chat */}
           <Link href="/sohbet">
             <div className="bg-dark-surface rounded-xl p-6 border border-dark-lighter hover:border-primary transition-colors duration-300 cursor-pointer">
-            <div className="w-14 h-14 bg-primary bg-opacity-20 rounded-full flex items-center justify-center mb-4">
-              <MessageSquare className="text-primary h-8 w-8" />
+            <div className="w-16 h-16 bg-primary bg-opacity-30 rounded-full flex items-center justify-center mb-4 shadow-lg shadow-primary/20">
+              <MessageSquare className="text-primary h-10 w-10" />
             </div>
             <h3 className="font-poppins font-semibold text-xl mb-3">
               Yapay Zeka Sohbet
@@ -76,8 +76,8 @@ const FeaturesSection = () => {
           {/* Feature 2: Visual Creation */}
           <Link href="/gorsel-olusturma">
           <div className="bg-dark-surface rounded-xl p-6 border border-dark-lighter hover:border-secondary transition-colors duration-300 cursor-pointer">
-            <div className="w-14 h-14 bg-secondary bg-opacity-20 rounded-full flex items-center justify-center mb-4">
-              <Image className="text-secondary h-8 w-8" />
+            <div className="w-16 h-16 bg-secondary bg-opacity-30 rounded-full flex items-center justify-center mb-4 shadow-lg shadow-secondary/20">
+              <Image className="text-secondary h-10 w-10" />
             </div>
             <h3 className="font-poppins font-semibold text-xl mb-3">
               Görsel Oluşturma
@@ -107,8 +107,8 @@ const FeaturesSection = () => {
           {/* Feature 3: AI Games */}
           <Link href="/oyunlar">
           <div className="bg-dark-surface rounded-xl p-6 border border-dark-lighter hover:border-accent transition-colors duration-300 cursor-pointer">
-            <div className="w-14 h-14 bg-accent bg-opacity-20 rounded-full flex items-center justify-center mb-4">
-              <Gamepad className="text-accent h-8 w-8" />
+            <div className="w-16 h-16 bg-accent bg-opacity-30 rounded-full flex items-center justify-center mb-4 shadow-lg shadow-accent/20">
+              <Gamepad className="text-accent h-10 w-10" />
             </div>
             <h3 className="font-poppins font-semibold text-xl mb-3">
               Yapay Zeka Oyunları
@@ -140,8 +140,8 @@ const FeaturesSection = () => {
           {/* Feature 4: Code Writing */}
           <Link href="/kod-yazma">
           <div className="bg-dark-surface rounded-xl p-6 border border-dark-lighter hover:border-primary transition-colors duration-300 cursor-pointer">
-            <div className="w-14 h-14 bg-primary bg-opacity-20 rounded-full flex items-center justify-center mb-4">
-              <Code className="text-primary h-8 w-8" />
+            <div className="w-16 h-16 bg-primary bg-opacity-30 rounded-full flex items-center justify-center mb-4 shadow-lg shadow-primary/20">
+              <Code className="text-primary h-10 w-10" />
             </div>
             <h3 className="font-poppins font-semibold text-xl mb-3">
               Kod Yazma
@@ -177,8 +177,8 @@ const FeaturesSection = () => {
           {/* Feature 5: User-friendly Interface */}
           <Link href="#">
           <div className="bg-dark-surface rounded-xl p-6 border border-dark-lighter hover:border-secondary transition-colors duration-300 cursor-pointer">
-            <div className="w-14 h-14 bg-secondary bg-opacity-20 rounded-full flex items-center justify-center mb-4">
-              <Layout className="text-secondary h-8 w-8" />
+            <div className="w-16 h-16 bg-secondary bg-opacity-30 rounded-full flex items-center justify-center mb-4 shadow-lg shadow-secondary/20">
+              <Layout className="text-secondary h-10 w-10" />
             </div>
             <h3 className="font-poppins font-semibold text-xl mb-3">
               Kullanıcı Dostu Arayüz
@@ -216,8 +216,8 @@ const FeaturesSection = () => {
           {/* Feature 6: Points System */}
           <Link href="#">
           <div className="bg-dark-surface rounded-xl p-6 border border-dark-lighter hover:border-accent transition-colors duration-300 cursor-pointer">
-            <div className="w-14 h-14 bg-accent bg-opacity-20 rounded-full flex items-center justify-center mb-4">
-              <Coins className="text-accent h-8 w-8" />
+            <div className="w-16 h-16 bg-accent bg-opacity-30 rounded-full flex items-center justify-center mb-4 shadow-lg shadow-accent/20">
+              <Coins className="text-accent h-10 w-10" />
             </div>
             <h3 className="font-poppins font-semibold text-xl mb-3">
               Puan Sistemi
