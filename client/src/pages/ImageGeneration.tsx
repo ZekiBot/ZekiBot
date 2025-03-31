@@ -1,6 +1,4 @@
 import { useState } from "react";
-import { useAuth } from "@/hooks/useAuth";
-import { usePoints } from "@/context/PointsContext";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { generateImage, getImageHistory, getAvailableModels, AIModel } from "@/lib/openai";
 import { Button } from "@/components/ui/button";
@@ -29,8 +27,9 @@ import { Image as ImageIcon, Loader2, Sparkles, Info, Cpu, CheckCircle2 } from "
 import LoginModal from "@/components/auth/LoginModal";
 
 const ImageGeneration = () => {
-  const { isAuthenticated } = useAuth();
-  const { points } = usePoints();
+  // Temporary mock data for development
+  const isAuthenticated = true;
+  const points = 100;
   const [prompt, setPrompt] = useState("");
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [selectedModel, setSelectedModel] = useState("openai");

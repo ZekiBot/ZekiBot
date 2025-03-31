@@ -5,7 +5,14 @@ import {
   Gamepad, 
   Code, 
   Shield, 
-  Coins
+  Coins,
+  MoveRight,
+  Smartphone,
+  Accessibility,
+  MousePointer,
+  CheckCircle,
+  Layout,
+  UserCheck
 } from "lucide-react";
 
 const FeaturesSection = () => {
@@ -41,19 +48,19 @@ const FeaturesSection = () => {
             </p>
             <ul className="space-y-2 mb-6">
               <li className="flex items-start">
-                <i className="fas fa-check text-accent mt-1 mr-2"></i>
+                <CheckCircle className="h-4 w-4 text-accent mt-1 mr-2" />
                 <span className="text-light-muted">
                   Metin tabanlı interaktif sohbet
                 </span>
               </li>
               <li className="flex items-start">
-                <i className="fas fa-check text-accent mt-1 mr-2"></i>
+                <CheckCircle className="h-4 w-4 text-accent mt-1 mr-2" />
                 <span className="text-light-muted">
                   Detaylı ve kapsamlı yanıtlar
                 </span>
               </li>
               <li className="flex items-start">
-                <i className="fas fa-check text-accent mt-1 mr-2"></i>
+                <CheckCircle className="h-4 w-4 text-accent mt-1 mr-2" />
                 <span className="text-light-muted">
                   Birden çok konuda destek
                 </span>
@@ -61,7 +68,7 @@ const FeaturesSection = () => {
             </ul>
             <Link href="/sohbet">
               <span className="inline-flex items-center text-primary hover:underline cursor-pointer">
-                Hemen Dene <i className="fas fa-arrow-right ml-1"></i>
+                Hemen Dene <MoveRight className="h-4 w-4 ml-1 inline" />
               </span>
             </Link>
           </div>
@@ -92,7 +99,7 @@ const FeaturesSection = () => {
             </div>
             <Link href="/gorsel-olusturma">
               <span className="inline-flex items-center text-secondary hover:underline cursor-pointer">
-                Görsel Oluştur <i className="fas fa-arrow-right ml-1"></i>
+                Görsel Oluştur <MoveRight className="h-4 w-4 ml-1 inline" />
               </span>
             </Link>
           </div>
@@ -125,7 +132,7 @@ const FeaturesSection = () => {
             </div>
             <Link href="/oyunlar">
               <span className="inline-flex items-center text-accent hover:underline cursor-pointer">
-                Oyunlara Göz At <i className="fas fa-arrow-right ml-1"></i>
+                Oyunlara Göz At <MoveRight className="h-4 w-4 ml-1 inline" />
               </span>
             </Link>
           </div>
@@ -162,7 +169,7 @@ const FeaturesSection = () => {
             </div>
             <Link href="/kod-yazma">
               <span className="inline-flex items-center text-primary hover:underline cursor-pointer">
-                Kodlamaya Başla <i className="fas fa-arrow-right ml-1"></i>
+                Kodlamaya Başla <MoveRight className="h-4 w-4 ml-1 inline" />
               </span>
             </Link>
           </div>
@@ -170,7 +177,7 @@ const FeaturesSection = () => {
           {/* Feature 5: User-friendly Interface */}
           <div className="bg-dark-surface rounded-xl p-6 border border-dark-lighter hover:border-secondary transition-colors duration-300">
             <div className="w-14 h-14 bg-secondary bg-opacity-20 rounded-full flex items-center justify-center mb-4">
-              <Shield className="text-secondary text-2xl" />
+              <Layout className="text-secondary text-2xl" />
             </div>
             <h3 className="font-poppins font-semibold text-xl mb-3">
               Kullanıcı Dostu Arayüz
@@ -182,19 +189,19 @@ const FeaturesSection = () => {
             <div className="flex justify-between items-center mb-6">
               <div className="flex flex-col items-center">
                 <div className="bg-secondary bg-opacity-10 p-2 rounded-full mb-2">
-                  <Shield className="h-5 w-5 text-secondary" />
+                  <MousePointer className="h-5 w-5 text-secondary" />
                 </div>
                 <span className="text-light-muted text-sm">Kolay Kullanım</span>
               </div>
               <div className="flex flex-col items-center">
                 <div className="bg-secondary bg-opacity-10 p-2 rounded-full mb-2">
-                  <Shield className="h-5 w-5 text-secondary" />
+                  <Smartphone className="h-5 w-5 text-secondary" />
                 </div>
                 <span className="text-light-muted text-sm">Mobil Uyumlu</span>
               </div>
               <div className="flex flex-col items-center">
                 <div className="bg-secondary bg-opacity-10 p-2 rounded-full mb-2">
-                  <Shield className="h-5 w-5 text-secondary" />
+                  <Accessibility className="h-5 w-5 text-secondary" />
                 </div>
                 <span className="text-light-muted text-sm">Erişilebilir</span>
               </div>
@@ -203,7 +210,7 @@ const FeaturesSection = () => {
               href="#"
               className="inline-flex items-center text-secondary hover:underline"
             >
-              Daha Fazla Bilgi <i className="fas fa-arrow-right ml-1"></i>
+              Daha Fazla Bilgi <MoveRight className="h-4 w-4 ml-1 inline" />
             </a>
           </div>
 
@@ -237,7 +244,7 @@ const FeaturesSection = () => {
               href="#"
               className="inline-flex items-center text-accent hover:underline"
             >
-              Puan Kazan <i className="fas fa-arrow-right ml-1"></i>
+              Puan Kazan <MoveRight className="h-4 w-4 ml-1 inline" />
             </a>
           </div>
         </div>

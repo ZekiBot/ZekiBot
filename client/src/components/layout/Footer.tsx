@@ -1,4 +1,5 @@
 import { Link } from "wouter";
+import { Brain, Twitter, Facebook, Instagram, Youtube } from "lucide-react";
 
 const Footer = () => {
   return (
@@ -8,7 +9,7 @@ const Footer = () => {
           <div>
             <div className="flex items-center mb-4">
               <div className="text-accent mr-2">
-                <i className="fas fa-robot text-2xl"></i>
+                <Brain className="h-6 w-6" />
               </div>
               <h3 className="font-poppins font-bold text-xl bg-gradient-to-r from-primary to-secondary text-transparent bg-clip-text">
                 ZekiBot
@@ -23,25 +24,25 @@ const Footer = () => {
                 href="#"
                 className="text-light-muted hover:text-primary transition-colors"
               >
-                <i className="fab fa-twitter"></i>
+                <Twitter className="h-5 w-5" />
               </a>
               <a
                 href="#"
                 className="text-light-muted hover:text-primary transition-colors"
               >
-                <i className="fab fa-facebook"></i>
+                <Facebook className="h-5 w-5" />
               </a>
               <a
                 href="#"
                 className="text-light-muted hover:text-primary transition-colors"
               >
-                <i className="fab fa-instagram"></i>
+                <Instagram className="h-5 w-5" />
               </a>
               <a
                 href="#"
                 className="text-light-muted hover:text-primary transition-colors"
               >
-                <i className="fab fa-youtube"></i>
+                <Youtube className="h-5 w-5" />
               </a>
             </div>
           </div>

@@ -1,19 +1,33 @@
 import { Switch, Route } from "wouter";
 import NotFound from "@/pages/not-found";
-import Home from "@/pages/Home";
+import Home from "@/pages/home";
 import AiChat from "@/pages/AiChat";
 import ImageGeneration from "@/pages/ImageGeneration";
-import Games from "@/pages/Games";
+import Games from "@/pages/games";
 import CodeAssistant from "@/pages/CodeAssistant";
 import Dashboard from "@/pages/Dashboard";
 import Admin from "@/pages/Admin";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-// import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/context/AuthContext";
 import { Toaster } from "@/components/ui/toaster";
 
-function Router() {
-  // Temporary mock data for development - remove in production
+function App() {
+  return (
+    <div className="flex flex-col min-h-screen bg-dark text-light font-inter">
+      <Header />
+      <main className="flex-grow">
+        <AppRoutes />
+      </main>
+      <Footer />
+      <Toaster />
+    </div>
+  );
+}
+
+// Routes component wrapped within App, so useAuth hook works properly
+function AppRoutes() {
+  // Temporarily using mock data for development
   const user = { id: 1, username: "Test", points: 100, isAdmin: true }; 
   const isAdmin = true;
 
@@ -28,19 +42,6 @@ function Router() {
       {isAdmin && <Route path="/admin" component={Admin} />}
       <Route component={NotFound} />
     </Switch>
-  );
-}
-
-function App() {
-  return (
-    <div className="flex flex-col min-h-screen bg-dark text-light font-inter">
-      <Header />
-      <main className="flex-grow">
-        <Router />
-      </main>
-      <Footer />
-      <Toaster />
-    </div>
   );
 }
 
