@@ -1,0 +1,83 @@
+ZekiBot: Multi-Purpose Web Platform Supported by Artificial Intelligence
+
+1. Project Description
+
+Prepare a presentation file for the elderly, children and those who are just learning to use the internet, completely in Turkish. Anyone who wants can chat, anyone who wants can create visuals, anyone who wants can play games, anyone who wants can write code, a website system that has everything that can be done with existing free AI models is called ZekiBot.
+
+Without the phrases "elderly, children and those who are just learning to use the internet" in the content, but these words are targeted in SEO tags.
+
+ZekiBot is a multi-purpose web platform where users can chat, create visuals, play games and write code with AI-supported tools. It is developed with free AI models and aims to provide a user-friendly experience.
+
+2. Technological Infrastructure
+
+Sub Domain: Vercel
+
+Hosting: GitHub
+
+Coding: Replit
+
+Interface: 3-grid system, dark theme (Elegance colors)
+
+SEO Friendly Structure: Link extensions are optimized to be in Turkish.
+
+Membership System: Account management module that allows users to log in. Free membership system with a credit fee called "Points".
+
+Social account colorful logos with one-click login and registration options pop-up login. Terms of use acceptance message after registration
+
+Database: A database structure optimized for storing user information and content.
+
+Social Media Login: Support for login with social media accounts such as Google, Facebook, etc.
+
+Administration Panel: Provides the opportunity to add, remove and edit themes, add, remove and edit templates, add, remove and edit pages with a WordPress-like system.
+
+3. Usage Scenarios
+
+A. Artificial Intelligence Chat
+
+Users can chat with advanced artificial intelligence models.
+
+The user is helped by providing text-based interaction.
+
+B. Visual Creation
+
+It can make drawings and designs with AI-supported visual creation tools.
+
+It offers the ability to produce images from text.
+
+C. Playing Games
+
+The opportunity to have fun with AI-supported mini games.
+
+D. Coding
+
+Users can perform AI-supported code writing and debugging operations.
+
+E. Various models that can be added
+
+It offers support in various programming languages.
+
+4. SEO Strategy
+
+User-friendly URL structure with Turkish link extensions.
+
+SEO title and meta descriptions are optimized using keywords.
+
+5. Artificial Intelligence Models
+
+ZekiBot works integrated with all AI models:
+
+Prepare the infrastructure,
+
+6. Admin Panel Features
+
+Adding, removing, updating pages.
+
+User management and permission settings.
+
+SEO optimization tools.
+
+Content moderation and monitoring mechanism.
+
+7. Conclusion
+
+ZekiBot is a web platform equipped with a user-friendly interface and artificial intelligence-supported services. It is a system that allows everyone to benefit from artificial intelligence with its easy use and powerful artificial intelligence tools.
