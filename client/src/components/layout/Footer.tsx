@@ -59,7 +59,7 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link href="/gorsel-olustur">
+                <Link href="/gorsel-olusturma">
                   <span className="text-light-muted hover:text-light transition-colors cursor-pointer block">
                     Görsel Oluşturma
                   </span>

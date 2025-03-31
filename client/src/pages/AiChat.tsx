@@ -258,7 +258,8 @@ const AiChat = () => {
                   placeholder="Mesajınızı yazın..."
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  className="flex-grow bg-dark-lighter border-dark-lighter focus:border-primary text-light"
+                  className="flex-grow bg-dark-lighter border-dark-lighter text-light"
+                  style={{ color: "white", borderColor: "#2D2D2D" }}
                   disabled={isSending || !isAuthenticated || points < getCurrentModelCost()}
                 />
                 <Button 

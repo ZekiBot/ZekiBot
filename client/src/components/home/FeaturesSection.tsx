@@ -1,5 +1,12 @@
 import { Link } from "wouter";
-import { MessageSquare, Image, Gamepad, Code, Shield, Coins } from "lucide-react";
+import { 
+  MessageSquare, 
+  Image, 
+  Gamepad, 
+  Code, 
+  Shield, 
+  Coins
+} from "lucide-react";
 
 const FeaturesSection = () => {
   return (
@@ -74,12 +81,12 @@ const FeaturesSection = () => {
             <div className="grid grid-cols-2 gap-3 mb-6">
               <img
                 src="https://images.unsplash.com/photo-1633536726481-516ad237def1?q=80&w=200&auto=format&fit=crop"
-                alt="AI Generated Mountain"
+                alt="Dağ Manzarası"
                 className="rounded-lg w-full h-24 object-cover"
               />
               <img
                 src="https://images.unsplash.com/photo-1679483391596-e1958b212f29?q=80&w=200&auto=format&fit=crop"
-                alt="AI Generated Abstract"
+                alt="Soyut Sanat"
                 className="rounded-lg w-full h-24 object-cover"
               />
             </div>
@@ -174,15 +181,21 @@ const FeaturesSection = () => {
             </p>
             <div className="flex justify-between items-center mb-6">
               <div className="flex flex-col items-center">
-                <i className="fas fa-mouse-pointer text-light-muted text-xl mb-2"></i>
+                <div className="bg-secondary bg-opacity-10 p-2 rounded-full mb-2">
+                  <Shield className="h-5 w-5 text-secondary" />
+                </div>
                 <span className="text-light-muted text-sm">Kolay Kullanım</span>
               </div>
               <div className="flex flex-col items-center">
-                <i className="fas fa-mobile-alt text-light-muted text-xl mb-2"></i>
+                <div className="bg-secondary bg-opacity-10 p-2 rounded-full mb-2">
+                  <Shield className="h-5 w-5 text-secondary" />
+                </div>
                 <span className="text-light-muted text-sm">Mobil Uyumlu</span>
               </div>
               <div className="flex flex-col items-center">
-                <i className="fas fa-universal-access text-light-muted text-xl mb-2"></i>
+                <div className="bg-secondary bg-opacity-10 p-2 rounded-full mb-2">
+                  <Shield className="h-5 w-5 text-secondary" />
+                </div>
                 <span className="text-light-muted text-sm">Erişilebilir</span>
               </div>
             </div>

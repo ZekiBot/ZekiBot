@@ -21,7 +21,7 @@ function Router() {
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/sohbet" component={AiChat} />
-      <Route path="/gorsel-olustur" component={ImageGeneration} />
+      <Route path="/gorsel-olusturma" component={ImageGeneration} />
       <Route path="/oyunlar" component={Games} />
       <Route path="/kod-yazma" component={CodeAssistant} />
       {user && <Route path="/profil" component={Dashboard} />}
