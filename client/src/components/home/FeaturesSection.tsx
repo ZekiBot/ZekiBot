@@ -35,9 +35,10 @@ const FeaturesSection = () => {
         {/* Features Grid - 3-column layout as requested */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Feature 1: AI Chat */}
-          <div className="bg-dark-surface rounded-xl p-6 border border-dark-lighter hover:border-primary transition-colors duration-300">
+          <Link href="/sohbet">
+            <div className="bg-dark-surface rounded-xl p-6 border border-dark-lighter hover:border-primary transition-colors duration-300 cursor-pointer">
             <div className="w-14 h-14 bg-primary bg-opacity-20 rounded-full flex items-center justify-center mb-4">
-              <MessageSquare className="text-primary text-2xl" />
+              <MessageSquare className="text-primary h-8 w-8" />
             </div>
             <h3 className="font-poppins font-semibold text-xl mb-3">
               Yapay Zeka Sohbet
@@ -66,17 +67,17 @@ const FeaturesSection = () => {
                 </span>
               </li>
             </ul>
-            <Link href="/sohbet">
-              <span className="inline-flex items-center text-primary hover:underline cursor-pointer">
-                Hemen Dene <MoveRight className="h-4 w-4 ml-1 inline" />
-              </span>
-            </Link>
+            <span className="inline-flex items-center text-primary mt-4 hover:underline cursor-pointer">
+              Hemen Dene <MoveRight className="h-4 w-4 ml-1 inline" />
+            </span>
           </div>
+          </Link>
 
           {/* Feature 2: Visual Creation */}
-          <div className="bg-dark-surface rounded-xl p-6 border border-dark-lighter hover:border-secondary transition-colors duration-300">
+          <Link href="/gorsel-olusturma">
+          <div className="bg-dark-surface rounded-xl p-6 border border-dark-lighter hover:border-secondary transition-colors duration-300 cursor-pointer">
             <div className="w-14 h-14 bg-secondary bg-opacity-20 rounded-full flex items-center justify-center mb-4">
-              <Image className="text-secondary text-2xl" />
+              <Image className="text-secondary h-8 w-8" />
             </div>
             <h3 className="font-poppins font-semibold text-xl mb-3">
               Görsel Oluşturma
@@ -97,17 +98,17 @@ const FeaturesSection = () => {
                 className="rounded-lg w-full h-24 object-cover"
               />
             </div>
-            <Link href="/gorsel-olusturma">
-              <span className="inline-flex items-center text-secondary hover:underline cursor-pointer">
-                Görsel Oluştur <MoveRight className="h-4 w-4 ml-1 inline" />
-              </span>
-            </Link>
+            <span className="inline-flex items-center text-secondary mt-4 hover:underline cursor-pointer">
+              Görsel Oluştur <MoveRight className="h-4 w-4 ml-1 inline" />
+            </span>
           </div>
+          </Link>
 
           {/* Feature 3: AI Games */}
-          <div className="bg-dark-surface rounded-xl p-6 border border-dark-lighter hover:border-accent transition-colors duration-300">
+          <Link href="/oyunlar">
+          <div className="bg-dark-surface rounded-xl p-6 border border-dark-lighter hover:border-accent transition-colors duration-300 cursor-pointer">
             <div className="w-14 h-14 bg-accent bg-opacity-20 rounded-full flex items-center justify-center mb-4">
-              <Gamepad className="text-accent text-2xl" />
+              <Gamepad className="text-accent h-8 w-8" />
             </div>
             <h3 className="font-poppins font-semibold text-xl mb-3">
               Yapay Zeka Oyunları
@@ -130,17 +131,17 @@ const FeaturesSection = () => {
                 <span className="text-accent">20 Puan</span>
               </div>
             </div>
-            <Link href="/oyunlar">
-              <span className="inline-flex items-center text-accent hover:underline cursor-pointer">
-                Oyunlara Göz At <MoveRight className="h-4 w-4 ml-1 inline" />
-              </span>
-            </Link>
+            <span className="inline-flex items-center text-accent mt-4 hover:underline cursor-pointer">
+              Oyunlara Göz At <MoveRight className="h-4 w-4 ml-1 inline" />
+            </span>
           </div>
+          </Link>
 
           {/* Feature 4: Code Writing */}
-          <div className="bg-dark-surface rounded-xl p-6 border border-dark-lighter hover:border-primary transition-colors duration-300">
+          <Link href="/kod-yazma">
+          <div className="bg-dark-surface rounded-xl p-6 border border-dark-lighter hover:border-primary transition-colors duration-300 cursor-pointer">
             <div className="w-14 h-14 bg-primary bg-opacity-20 rounded-full flex items-center justify-center mb-4">
-              <Code className="text-primary text-2xl" />
+              <Code className="text-primary h-8 w-8" />
             </div>
             <h3 className="font-poppins font-semibold text-xl mb-3">
               Kod Yazma
@@ -167,17 +168,17 @@ const FeaturesSection = () => {
                 </code>
               </pre>
             </div>
-            <Link href="/kod-yazma">
-              <span className="inline-flex items-center text-primary hover:underline cursor-pointer">
-                Kodlamaya Başla <MoveRight className="h-4 w-4 ml-1 inline" />
-              </span>
-            </Link>
+            <span className="inline-flex items-center text-primary mt-4 hover:underline cursor-pointer">
+              Kodlamaya Başla <MoveRight className="h-4 w-4 ml-1 inline" />
+            </span>
           </div>
+          </Link>
 
           {/* Feature 5: User-friendly Interface */}
-          <div className="bg-dark-surface rounded-xl p-6 border border-dark-lighter hover:border-secondary transition-colors duration-300">
+          <Link href="#">
+          <div className="bg-dark-surface rounded-xl p-6 border border-dark-lighter hover:border-secondary transition-colors duration-300 cursor-pointer">
             <div className="w-14 h-14 bg-secondary bg-opacity-20 rounded-full flex items-center justify-center mb-4">
-              <Layout className="text-secondary text-2xl" />
+              <Layout className="text-secondary h-8 w-8" />
             </div>
             <h3 className="font-poppins font-semibold text-xl mb-3">
               Kullanıcı Dostu Arayüz
@@ -206,18 +207,17 @@ const FeaturesSection = () => {
                 <span className="text-light-muted text-sm">Erişilebilir</span>
               </div>
             </div>
-            <a
-              href="#"
-              className="inline-flex items-center text-secondary hover:underline"
-            >
+            <span className="inline-flex items-center text-secondary mt-4 hover:underline cursor-pointer">
               Daha Fazla Bilgi <MoveRight className="h-4 w-4 ml-1 inline" />
-            </a>
+            </span>
           </div>
+          </Link>
 
           {/* Feature 6: Points System */}
-          <div className="bg-dark-surface rounded-xl p-6 border border-dark-lighter hover:border-accent transition-colors duration-300">
+          <Link href="#">
+          <div className="bg-dark-surface rounded-xl p-6 border border-dark-lighter hover:border-accent transition-colors duration-300 cursor-pointer">
             <div className="w-14 h-14 bg-accent bg-opacity-20 rounded-full flex items-center justify-center mb-4">
-              <Coins className="text-accent text-2xl" />
+              <Coins className="text-accent h-8 w-8" />
             </div>
             <h3 className="font-poppins font-semibold text-xl mb-3">
               Puan Sistemi
@@ -240,13 +240,11 @@ const FeaturesSection = () => {
                 <span className="text-accent">+20 Puan</span>
               </div>
             </div>
-            <a
-              href="#"
-              className="inline-flex items-center text-accent hover:underline"
-            >
+            <span className="inline-flex items-center text-accent mt-4 hover:underline cursor-pointer">
               Puan Kazan <MoveRight className="h-4 w-4 ml-1 inline" />
-            </a>
+            </span>
           </div>
+          </Link>
         </div>
       </div>
     </section>
