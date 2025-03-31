@@ -1,50 +1,46 @@
 import { Switch, Route } from "wouter";
-import { queryClient } from "./lib/queryClient";
-import { QueryClientProvider } from "@tanstack/react-query";
-import { Toaster } from "@/components/ui/toaster";
-import { AuthProvider } from "./context/AuthContext";
-import { PointsProvider } from "./context/PointsContext";
-
 import NotFound from "@/pages/not-found";
-import Home from "@/pages/home";
-import AITools from "@/pages/ai-tools";
-import Chat from "@/pages/chat";
-import ImageGenerator from "@/pages/image-generator";
-import Games from "@/pages/games";
-import CodeAssistant from "@/pages/code-assistant";
-import Pricing from "@/pages/pricing";
-import Admin from "@/pages/admin/index";
-import Layout from "@/components/layout/Layout";
+import Home from "@/pages/Home";
+import AiChat from "@/pages/AiChat";
+import ImageGeneration from "@/pages/ImageGeneration";
+import Games from "@/pages/Games";
+import CodeAssistant from "@/pages/CodeAssistant";
+import Dashboard from "@/pages/Dashboard";
+import Admin from "@/pages/Admin";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
+import { useAuth } from "@/hooks/useAuth";
+import { PointsProvider } from "@/context/PointsContext";
 
 function Router() {
+  const { user, isAdmin } = useAuth();
+
   return (
-    <Layout>
-      <Switch>
-        <Route path="/" component={Home} />
-        <Route path="/ai-tools" component={AITools} />
-        <Route path="/chat" component={Chat} />
-        <Route path="/image-generator" component={ImageGenerator} />
-        <Route path="/games" component={Games} />
-        <Route path="/code-assistant" component={CodeAssistant} />
-        <Route path="/pricing" component={Pricing} />
-        <Route path="/admin" component={Admin} />
-        {/* Fallback to 404 */}
-        <Route component={NotFound} />
-      </Switch>
-    </Layout>
+    <Switch>
+      <Route path="/" component={Home} />
+      <Route path="/sohbet" component={AiChat} />
+      <Route path="/gorsel-olustur" component={ImageGeneration} />
+      <Route path="/oyunlar" component={Games} />
+      <Route path="/kod-yazma" component={CodeAssistant} />
+      {user && <Route path="/profil" component={Dashboard} />}
+      {isAdmin && <Route path="/admin" component={Admin} />}
+      <Route component={NotFound} />
+    </Switch>
   );
 }
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <PointsProvider>
+    // Wrap everything in PointsProvider since it depends on AuthProvider which is higher up in main.tsx
+    <PointsProvider>
+      <div className="flex flex-col min-h-screen bg-dark text-light font-inter">
+        <Header />
+        <main className="flex-grow">
           <Router />
-          <Toaster />
-        </PointsProvider>
-      </AuthProvider>
-    </QueryClientProvider>
+        </main>
+        <Footer />
+      </div>
+    </PointsProvider>
   );
 }
 

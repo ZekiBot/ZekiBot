@@ -1,137 +1,242 @@
-import React from 'react';
-import { Link, useLocation } from 'wouter';
-import { useAuth } from '@/context/AuthContext';
-import { usePoints } from '@/context/PointsContext';
-import PointsDisplay from '../ui/dashboard/PointsDisplay';
-import { Button } from '@/components/ui/button';
+import { useState } from "react";
+import { Link } from "wouter";
+import { useAuth } from "@/hooks/useAuth";
+import { usePoints } from "@/context/PointsContext";
+import LoginModal from "@/components/auth/LoginModal";
+import RegisterModal from "@/components/auth/RegisterModal";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { User, LogOut, Settings, History, Code, Image, MessageSquare, Gamepad2, List } from "lucide-react";
 
-interface HeaderProps {
-  toggleMobileMenu: () => void;
-  openLoginModal: () => void;
-  openRegisterModal: () => void;
-}
-
-const Header: React.FC<HeaderProps> = ({ toggleMobileMenu, openLoginModal, openRegisterModal }) => {
-  const { isAuthenticated, user, logout } = useAuth();
+const Header = () => {
+  const { isAuthenticated, user, logout, isAdmin } = useAuth();
   const { points } = usePoints();
-  const [location] = useLocation();
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const handleLogout = async () => {
-    try {
-      await logout();
-    } catch (error) {
-      console.error("Logout failed:", error);
-    }
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
+  };
+
+  const handleLoginClick = () => {
+    setIsLoginModalOpen(true);
+  };
+
+  const handleRegisterClick = () => {
+    setIsRegisterModalOpen(true);
+  };
+
+  const handleLogout = () => {
+    logout();
   };
 
   return (
-    <header className="bg-dark-surface border-b border-dark-border sticky top-0 z-50">
-      <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-        <div className="flex items-center gap-3">
-          {/* Logo */}
-          <Link href="/">
-            <a className="flex items-center">
-              <span className="text-2xl font-bold bg-gradient-to-r from-primary-light via-primary to-accent bg-clip-text text-transparent">ZekiBot</span>
-            </a>
-          </Link>
-          
-          {/* Main Navigation - Desktop */}
-          <nav className="hidden md:flex ml-8 gap-6">
-            <Link href="/">
-              <a className={`py-2 ${location === "/" ? "text-white" : "text-gray-300"} hover:text-primary-light transition`}>
-                Ana Sayfa
-              </a>
-            </Link>
-            <Link href="/ai-tools">
-              <a className={`py-2 ${location === "/ai-tools" ? "text-white" : "text-gray-300"} hover:text-primary-light transition`}>
-                Özellikler
-              </a>
-            </Link>
-            <Link href="/pricing">
-              <a className={`py-2 ${location === "/pricing" ? "text-white" : "text-gray-300"} hover:text-primary-light transition`}>
-                Fiyatlandırma
-              </a>
-            </Link>
-            {isAuthenticated && (
-              <>
-                <Link href="/chat">
-                  <a className={`py-2 ${location === "/chat" ? "text-white" : "text-gray-300"} hover:text-primary-light transition`}>
-                    Sohbet
-                  </a>
-                </Link>
-                <Link href="/image-generator">
-                  <a className={`py-2 ${location === "/image-generator" ? "text-white" : "text-gray-300"} hover:text-primary-light transition`}>
-                    Görsel
-                  </a>
-                </Link>
-                <Link href="/games">
-                  <a className={`py-2 ${location === "/games" ? "text-white" : "text-gray-300"} hover:text-primary-light transition`}>
-                    Oyunlar
-                  </a>
-                </Link>
-                <Link href="/code-assistant">
-                  <a className={`py-2 ${location === "/code-assistant" ? "text-white" : "text-gray-300"} hover:text-primary-light transition`}>
-                    Kod
-                  </a>
-                </Link>
-                {user?.isAdmin && (
-                  <Link href="/admin">
-                    <a className={`py-2 ${location === "/admin" ? "text-white" : "text-gray-300"} hover:text-primary-light transition`}>
-                      Admin
+    <>
+      <header className="bg-dark-surface border-b border-dark-lighter">
+        <div className="container mx-auto px-4 py-3">
+          <div className="flex justify-between items-center">
+            {/* Logo */}
+            <div className="flex items-center">
+              <div className="text-accent mr-2">
+                <i className="fas fa-robot text-3xl"></i>
+              </div>
+              <Link href="/">
+                <h1 className="font-poppins font-bold text-2xl md:text-3xl bg-gradient-to-r from-primary to-secondary text-transparent bg-clip-text cursor-pointer">
+                  ZekiBot
+                </h1>
+              </Link>
+            </div>
+
+            {/* Navigation for desktop */}
+            <nav className="hidden md:flex items-center space-x-6">
+              <Link href="/">
+                <a className="text-light hover:text-accent transition-colors font-medium">
+                  Ana Sayfa
+                </a>
+              </Link>
+              <Link href="/#features">
+                <a className="text-light hover:text-accent transition-colors font-medium">
+                  Özellikler
+                </a>
+              </Link>
+              <Link href="/sohbet">
+                <a className="text-light hover:text-accent transition-colors font-medium">
+                  Sohbet
+                </a>
+              </Link>
+              <Link href="/gorsel-olustur">
+                <a className="text-light hover:text-accent transition-colors font-medium">
+                  Görsel Oluştur
+                </a>
+              </Link>
+            </nav>
+
+            {/* User and Mobile Menu */}
+            <div className="flex items-center space-x-4">
+              {isAuthenticated && (
+                <div className="hidden md:flex items-center text-accent bg-dark-lighter rounded-full px-3 py-1">
+                  <i className="fas fa-coins mr-1"></i>
+                  <span className="font-medium">{points}</span> Puan
+                </div>
+              )}
+
+              {isAuthenticated ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      className="relative h-8 w-8 rounded-full"
+                    >
+                      <div className="flex items-center justify-center h-8 w-8 rounded-full bg-primary text-white">
+                        {user?.username?.charAt(0).toUpperCase()}
+                      </div>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem className="flex items-center gap-2">
+                      <User className="w-4 h-4" />
+                      <Link href="/profil">
+                        <span>Profilim</span>
+                      </Link>
+                    </DropdownMenuItem>
+                    {isAdmin && (
+                      <DropdownMenuItem className="flex items-center gap-2">
+                        <Settings className="w-4 h-4" />
+                        <Link href="/admin">
+                          <span>Yönetici Paneli</span>
+                        </Link>
+                      </DropdownMenuItem>
+                    )}
+                    <DropdownMenuItem
+                      className="flex items-center gap-2 text-red-500"
+                      onClick={handleLogout}
+                    >
+                      <LogOut className="w-4 h-4" />
+                      <span>Çıkış Yap</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <Button
+                  className="bg-primary hover:bg-opacity-90 text-white font-medium px-4 py-2 rounded-lg transition-colors"
+                  onClick={handleLoginClick}
+                >
+                  Giriş Yap
+                </Button>
+              )}
+
+              <button
+                className="md:hidden text-light hover:text-accent focus:outline-none"
+                onClick={toggleMobileMenu}
+              >
+                <List className="w-6 h-6" />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Mobile Navigation Menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden bg-dark-surface border-t border-dark-lighter px-4 py-2">
+            <nav className="flex flex-col space-y-3 py-2">
+              <Link href="/">
+                <a
+                  className="text-light hover:text-accent transition-colors font-medium py-2"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Ana Sayfa
+                </a>
+              </Link>
+              <Link href="/#features">
+                <a
+                  className="text-light hover:text-accent transition-colors font-medium py-2"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Özellikler
+                </a>
+              </Link>
+              <Link href="/sohbet">
+                <a
+                  className="text-light hover:text-accent transition-colors font-medium py-2"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <MessageSquare className="w-4 h-4 inline mr-2" />
+                  Sohbet
+                </a>
+              </Link>
+              <Link href="/gorsel-olustur">
+                <a
+                  className="text-light hover:text-accent transition-colors font-medium py-2"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <Image className="w-4 h-4 inline mr-2" />
+                  Görsel Oluştur
+                </a>
+              </Link>
+              <Link href="/oyunlar">
+                <a
+                  className="text-light hover:text-accent transition-colors font-medium py-2"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <Gamepad2 className="w-4 h-4 inline mr-2" />
+                  Oyunlar
+                </a>
+              </Link>
+              <Link href="/kod-yazma">
+                <a
+                  className="text-light hover:text-accent transition-colors font-medium py-2"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <Code className="w-4 h-4 inline mr-2" />
+                  Kod Yazma
+                </a>
+              </Link>
+              {isAuthenticated && (
+                <>
+                  <Link href="/profil">
+                    <a
+                      className="text-light hover:text-accent transition-colors font-medium py-2"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      <User className="w-4 h-4 inline mr-2" />
+                      Profilim
                     </a>
                   </Link>
-                )}
-              </>
-            )}
-          </nav>
-        </div>
-        
-        {/* Auth Buttons */}
-        <div className="flex items-center gap-3">
-          {isAuthenticated ? (
-            <>
-              <div className="hidden sm:block">
-                <PointsDisplay points={points} />
-              </div>
-              <Button
-                variant="outline"
-                className="px-4 py-1.5 text-sm border-primary-light text-primary-light hover:bg-primary-dark/20"
-                onClick={handleLogout}
-              >
-                Çıkış Yap
-              </Button>
-            </>
-          ) : (
-            <>
-              <Button
-                variant="outline"
-                className="px-4 py-1.5 text-sm border-primary-light text-primary-light hover:bg-primary-dark/20"
-                onClick={openLoginModal}
-              >
-                Giriş Yap
-              </Button>
-              <Button
-                variant="default"
-                className="px-4 py-1.5 text-sm bg-primary-light hover:bg-primary-dark text-white"
-                onClick={openRegisterModal}
-              >
-                Kayıt Ol
-              </Button>
-            </>
-          )}
-          
-          {/* Mobile Menu Toggle */}
-          <button 
-            onClick={toggleMobileMenu}
-            className="md:hidden ml-2 text-gray-400 hover:text-white"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
-        </div>
-      </div>
-    </header>
+                  <div className="flex items-center text-accent py-2">
+                    <i className="fas fa-coins mr-1"></i>
+                    <span>{points}</span> Puan
+                  </div>
+                </>
+              )}
+            </nav>
+          </div>
+        )}
+      </header>
+
+      <LoginModal
+        isOpen={isLoginModalOpen}
+        onClose={() => setIsLoginModalOpen(false)}
+        onRegisterClick={() => {
+          setIsLoginModalOpen(false);
+          setIsRegisterModalOpen(true);
+        }}
+      />
+
+      <RegisterModal
+        isOpen={isRegisterModalOpen}
+        onClose={() => setIsRegisterModalOpen(false)}
+        onLoginClick={() => {
+          setIsRegisterModalOpen(false);
+          setIsLoginModalOpen(true);
+        }}
+      />
+    </>
   );
 };
 

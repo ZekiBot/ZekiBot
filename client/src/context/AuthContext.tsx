@@ -1,111 +1,212 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
+import { createContext, useState, ReactNode, useContext, useEffect } from 'react';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
-import { User } from '@shared/schema';
+import { queryClient } from '@/lib/queryClient';
+import { useToast } from '@/hooks/use-toast';
+import { useLocation } from 'wouter';
 
-interface AuthContextType {
+// Define types
+export type User = {
+  id: number;
+  username: string;
+  email: string;
+  points: number;
+  isAdmin: boolean;
+};
+
+export type AuthContextType = {
+  // Auth state
   user: User | null;
+  isAdmin: boolean;
   isAuthenticated: boolean;
-  isLoading: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  register: (userData: any) => Promise<void>;
-  logout: () => Promise<void>;
-  socialLogin: (provider: string) => void;
-}
+  isAuthLoading: boolean;
+  register: (credentials: { username: string; email: string; password: string }) => void;
+  login: (credentials: { email: string; password: string }) => void;
+  logout: () => void;
+  isRegistering: boolean;
+  isLoggingIn: boolean;
+  isLoggingOut: boolean;
+  
+  // Points state
+  points: number;
+  transactions: any[];
+  pointsLoading: boolean;
+  claimDailyBonus: () => void;
+  isClaimingBonus: boolean;
+};
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | null>(null);
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [points, setPoints] = useState<number>(0); 
+  const { toast } = useToast();
+  const [, setLocation] = useLocation();
+  const isAdmin = user?.isAdmin || false;
+  const isAuthenticated = !!user;
 
+  // Auth status query
+  const { data: authData, isLoading: isAuthLoading } = useQuery<User | null>({
+    queryKey: ['/api/auth/status'],
+    retry: false,
+    initialData: null
+  });
+
+  // Update user from auth status
   useEffect(() => {
-    // Check if user is logged in
-    const checkAuthStatus = async () => {
-      try {
-        const res = await fetch('/api/auth/me', {
-          credentials: 'include'
-        });
-
-        if (res.ok) {
-          const userData = await res.json();
-          setUser(userData);
-        } else {
-          setUser(null);
-        }
-      } catch (error) {
-        console.error('Auth check failed:', error);
-        setUser(null);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    checkAuthStatus();
-  }, []);
-
-  const login = async (email: string, password: string) => {
-    setIsLoading(true);
-    try {
-      const response = await apiRequest('POST', '/api/auth/login', { email, password });
-      const userData = await response.json();
-      setUser(userData);
-    } catch (error) {
-      console.error('Login failed:', error);
-      throw error;
-    } finally {
-      setIsLoading(false);
+    if (authData) {
+      setUser(authData as User);
+      setPoints(authData.points);
     }
-  };
+  }, [authData]);
 
-  const register = async (userData: any) => {
-    setIsLoading(true);
-    try {
-      const response = await apiRequest('POST', '/api/auth/register', userData);
-      const newUser = await response.json();
-      setUser(newUser);
-    } catch (error) {
-      console.error('Registration failed:', error);
-      throw error;
-    } finally {
-      setIsLoading(false);
+  // Query for user points
+  const { data: pointsData, isLoading: isPointsLoading } = useQuery<{points: number}>({
+    queryKey: ['/api/user/points'],
+    enabled: isAuthenticated,
+    initialData: {points: 0}
+  });
+
+  // Query for transactions history
+  const { data: transactionsData, isLoading: isTransactionsLoading } = useQuery<any[]>({
+    queryKey: ['/api/user/transactions'],
+    enabled: isAuthenticated,
+    initialData: []
+  });
+
+  // Effect to update points from API
+  useEffect(() => {
+    if (pointsData) {
+      setPoints(pointsData.points);
     }
-  };
+  }, [pointsData]);
 
-  const logout = async () => {
-    try {
-      await apiRequest('POST', '/api/auth/logout', {});
+  // Register mutation
+  const register = useMutation({
+    mutationFn: async (credentials: { username: string; email: string; password: string }) => {
+      const res = await apiRequest('POST', '/api/auth/register', credentials);
+      return res.json();
+    },
+    onSuccess: (data) => {
+      setUser(data);
+      toast({
+        title: "Başarılı!",
+        description: "Hesabınız oluşturuldu ve giriş yapıldı.",
+      });
+      setLocation('/');
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Hata!",
+        description: error.message || "Kayıt sırasında bir hata oluştu.",
+        variant: "destructive",
+      });
+    }
+  });
+
+  // Login mutation
+  const login = useMutation({
+    mutationFn: async (credentials: { email: string; password: string }) => {
+      const res = await apiRequest('POST', '/api/auth/login', credentials);
+      return res.json();
+    },
+    onSuccess: (data) => {
+      setUser(data);
+      toast({
+        title: "Başarılı!",
+        description: "Giriş yapıldı.",
+      });
+      setLocation('/');
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Hata!",
+        description: error.message || "Giriş sırasında bir hata oluştu.",
+        variant: "destructive",
+      });
+    }
+  });
+
+  // Logout mutation
+  const logout = useMutation({
+    mutationFn: async () => {
+      const res = await apiRequest('POST', '/api/auth/logout');
+      return res.json();
+    },
+    onSuccess: () => {
       setUser(null);
-    } catch (error) {
-      console.error('Logout failed:', error);
-      throw error;
+      toast({
+        title: "Çıkış Yapıldı",
+        description: "Oturumunuz sonlandırıldı.",
+      });
+      setLocation('/');
+    },
+    onError: () => {
+      toast({
+        title: "Hata!",
+        description: "Çıkış yapılırken bir hata oluştu.",
+        variant: "destructive",
+      });
     }
-  };
+  });
 
-  const socialLogin = (provider: string) => {
-    window.location.href = `/api/auth/${provider}`;
-  };
+  // Daily bonus mutation
+  const dailyBonus = useMutation({
+    mutationFn: async () => {
+      const res = await apiRequest('POST', '/api/user/daily-bonus');
+      return res.json();
+    },
+    onSuccess: () => {
+      // Invalidate queries to refresh data
+      queryClient.invalidateQueries({ queryKey: ['/api/user/points'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/user/transactions'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/auth/status'] });
+      
+      toast({
+        title: "Günlük Bonus!",
+        description: "5 puan kazandınız!",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Hata!",
+        description: "Günlük bonus alınırken bir hata oluştu.",
+        variant: "destructive",
+      });
+    }
+  });
 
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        isAuthenticated: !!user,
-        isLoading,
-        login,
-        register,
-        logout,
-        socialLogin
-      }}
-    >
+    <AuthContext.Provider value={{
+      // Auth state
+      user,
+      isAdmin,
+      isAuthenticated,
+      isAuthLoading,
+      register: register.mutate,
+      login: login.mutate,
+      logout: logout.mutate,
+      isRegistering: register.isPending,
+      isLoggingIn: login.isPending,
+      isLoggingOut: logout.isPending,
+      
+      // Points state
+      points,
+      transactions: transactionsData || [],
+      pointsLoading: isPointsLoading || isTransactionsLoading,
+      claimDailyBonus: dailyBonus.mutate,
+      isClaimingBonus: dailyBonus.isPending
+    }}>
       {children}
     </AuthContext.Provider>
   );
-};
+}
 
-export const useAuth = () => {
+// Custom hook for accessing the auth context
+export function useAuth() {
   const context = useContext(AuthContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
-};
+}
