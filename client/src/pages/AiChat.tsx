@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
-import { useAuth } from "@/hooks/useAuth";
-import { usePoints } from "@/context/PointsContext";
+// import { useAuth } from "@/hooks/useAuth";
+// import { usePoints } from "@/context/PointsContext";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { sendChatMessage, getChatHistory } from "@/lib/openai";
 import { Button } from "@/components/ui/button";
@@ -17,8 +17,10 @@ import {
 import LoginModal from "@/components/auth/LoginModal";
 
 const AiChat = () => {
-  const { user, isAuthenticated } = useAuth();
-  const { points } = usePoints();
+  // Mock data for development - remove in production
+  const user = { id: 1, username: "Test" };
+  const isAuthenticated = true;
+  const points = 100;
   const [message, setMessage] = useState("");
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);

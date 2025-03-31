@@ -53,9 +53,9 @@ const FeaturesSection = () => {
               </li>
             </ul>
             <Link href="/sohbet">
-              <a className="inline-flex items-center text-primary hover:underline">
+              <span className="inline-flex items-center text-primary hover:underline cursor-pointer">
                 Hemen Dene <i className="fas fa-arrow-right ml-1"></i>
-              </a>
+              </span>
             </Link>
           </div>
 
@@ -83,10 +83,10 @@ const FeaturesSection = () => {
                 className="rounded-lg w-full h-24 object-cover"
               />
             </div>
-            <Link href="/gorsel-olustur">
-              <a className="inline-flex items-center text-secondary hover:underline">
+            <Link href="/gorsel-olusturma">
+              <span className="inline-flex items-center text-secondary hover:underline cursor-pointer">
                 Görsel Oluştur <i className="fas fa-arrow-right ml-1"></i>
-              </a>
+              </span>
             </Link>
           </div>
 
@@ -117,9 +117,9 @@ const FeaturesSection = () => {
               </div>
             </div>
             <Link href="/oyunlar">
-              <a className="inline-flex items-center text-accent hover:underline">
+              <span className="inline-flex items-center text-accent hover:underline cursor-pointer">
                 Oyunlara Göz At <i className="fas fa-arrow-right ml-1"></i>
-              </a>
+              </span>
             </Link>
           </div>
 
@@ -154,9 +154,9 @@ const FeaturesSection = () => {
               </pre>
             </div>
             <Link href="/kod-yazma">
-              <a className="inline-flex items-center text-primary hover:underline">
+              <span className="inline-flex items-center text-primary hover:underline cursor-pointer">
                 Kodlamaya Başla <i className="fas fa-arrow-right ml-1"></i>
-              </a>
+              </span>
             </Link>
           </div>
 

@@ -108,7 +108,9 @@ export class MemStorage implements IStorage {
       id, 
       points: 100, 
       isAdmin: false,
-      createdAt: now
+      createdAt: now,
+      provider: insertUser.provider || null,
+      providerId: insertUser.providerId || null
     };
     this.users.set(id, user);
     return user;

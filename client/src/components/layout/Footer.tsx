@@ -53,30 +53,30 @@ const Footer = () => {
             <ul className="space-y-2">
               <li>
                 <Link href="/sohbet">
-                  <a className="text-light-muted hover:text-light transition-colors">
+                  <span className="text-light-muted hover:text-light transition-colors cursor-pointer block">
                     Yapay Zeka Sohbet
-                  </a>
+                  </span>
                 </Link>
               </li>
               <li>
                 <Link href="/gorsel-olustur">
-                  <a className="text-light-muted hover:text-light transition-colors">
+                  <span className="text-light-muted hover:text-light transition-colors cursor-pointer block">
                     Görsel Oluşturma
-                  </a>
+                  </span>
                 </Link>
               </li>
               <li>
                 <Link href="/oyunlar">
-                  <a className="text-light-muted hover:text-light transition-colors">
+                  <span className="text-light-muted hover:text-light transition-colors cursor-pointer block">
                     Yapay Zeka Oyunları
-                  </a>
+                  </span>
                 </Link>
               </li>
               <li>
                 <Link href="/kod-yazma">
-                  <a className="text-light-muted hover:text-light transition-colors">
+                  <span className="text-light-muted hover:text-light transition-colors cursor-pointer block">
                     Kod Yazma
-                  </a>
+                  </span>
                 </Link>
               </li>
               <li>

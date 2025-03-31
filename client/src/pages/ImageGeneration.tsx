@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useAuth } from "@/hooks/useAuth";
-import { usePoints } from "@/context/PointsContext";
+// import { useAuth } from "@/hooks/useAuth";
+// import { usePoints } from "@/context/PointsContext";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { generateImage, getImageHistory } from "@/lib/openai";
 import { Button } from "@/components/ui/button";
@@ -23,8 +23,9 @@ import { Image as ImageIcon, Loader2, Sparkles, Info } from "lucide-react";
 import LoginModal from "@/components/auth/LoginModal";
 
 const ImageGeneration = () => {
-  const { isAuthenticated } = useAuth();
-  const { points } = usePoints();
+  // Mock data for development - remove in production
+  const isAuthenticated = true;
+  const points = 100;
   const [prompt, setPrompt] = useState("");
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const queryClient = useQueryClient();
