@@ -17,9 +17,10 @@ export type AIModel = {
   supportsCode: boolean;
 };
 
-// Check if we're in static (GitHub Pages) mode
+// Check if we're in static mode (GitHub Pages or Vercel)
 const isStaticMode = () => {
   return window.location.hostname.includes('github.io') || 
+         window.location.hostname.includes('vercel.app') ||
          import.meta.env.VITE_STATIC_MODE === 'true';
 };
 
