@@ -1,4 +1,3 @@
-
 # ZekiBot Sohbet Geçmişi
 
 ## Kullanıcı Yazışmaları
@@ -108,3 +107,19 @@ Proje tamamen modern web teknolojileri kullanılarak geliştirilmiş ve yapay ze
 
 Projede çoklu AI model desteği, puan sistemi ve kullanıcı dostu bir arayüz başarıyla entegre edilmiş durumda.
 
+
+### Oturum 2 (ZekiBot Agent Sohbetleri)
+
+Aşağıdaki mesajlaşmalar Chat arayüzünden alınmıştır:
+
+**Kullanıcı**: Merhaba!
+
+**ZekiBot**: Merhaba! Ben ZekiBot. Size nasıl yardımcı olabilirim?
+
+**Kullanıcı**: Proje hakkında bilgi verir misin?
+
+**ZekiBot**: Elbette! ZekiBot çok amaçlı bir Türkçe web platformudur. Yapay zeka destekli sohbet, görsel oluşturma, kod asistanı ve oyun özellikleri sunmaktadır. OpenAI, HuggingFace, DeepSeek, Google Gemini ve Groq gibi çeşitli AI modellerini kullanarak size yardımcı olabilirim.
+
+**Kullanıcı**: Teşekkürler!
+
+**ZekiBot**: Rica ederim! Başka bir konuda yardıma ihtiyacınız olursa bana sorabilirsiniz.
