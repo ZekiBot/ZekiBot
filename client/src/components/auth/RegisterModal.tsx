@@ -62,8 +62,8 @@ const RegisterModal = ({ isOpen, onClose, onLoginClick }: RegisterModalProps) =>
           </Button>
         </div>
 
-        <div className="space-y-3">
-          <div className="grid grid-cols-2 gap-2">
+        <div>
+          <div className="grid grid-cols-2 gap-2 mb-2">
             <Button 
               className="flex items-center justify-center bg-white text-black py-2 px-3 rounded-lg hover:bg-opacity-90 transition-colors text-sm"
               onClick={() => console.log("Google signup")}
@@ -77,7 +77,7 @@ const RegisterModal = ({ isOpen, onClose, onLoginClick }: RegisterModalProps) =>
               <Facebook className="mr-1 h-4 w-4" /> Facebook
             </Button>
           </div>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-3 gap-2 mb-2">
             <Button 
               className="flex items-center justify-center bg-[#1DA1F2] text-white py-2 rounded-lg hover:bg-opacity-90 transition-colors"
               onClick={() => console.log("Twitter signup")}
@@ -98,7 +98,7 @@ const RegisterModal = ({ isOpen, onClose, onLoginClick }: RegisterModalProps) =>
             </Button>
           </div>
 
-          <div className="flex items-center my-2">
+          <div className="flex items-center mb-2">
             <Separator className="flex-grow" />
             <span className="mx-2 text-light-muted text-xs">veya e-posta ile kayıt ol</span>
             <Separator className="flex-grow" />

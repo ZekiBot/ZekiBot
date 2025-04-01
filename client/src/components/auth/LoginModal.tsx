@@ -216,8 +216,8 @@ const LoginModal = ({ isOpen, onClose, onRegisterClick, onLoginSuccess }: LoginM
           </Button>
         </div>
 
-        <div className="space-y-3">
-          <div className="grid grid-cols-2 gap-2">
+        <div>
+          <div className="grid grid-cols-2 gap-2 mb-2">
             <Button 
               className="flex items-center justify-center bg-white text-black py-2 px-3 rounded-lg hover:bg-opacity-90 transition-colors text-sm"
               onClick={handleGoogleLogin}
@@ -231,7 +231,7 @@ const LoginModal = ({ isOpen, onClose, onRegisterClick, onLoginSuccess }: LoginM
               <Facebook className="mr-1 h-4 w-4" /> Facebook
             </Button>
           </div>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-3 gap-2 mb-2">
             <Button 
               className="flex items-center justify-center bg-[#1DA1F2] text-white py-2 rounded-lg hover:bg-opacity-90 transition-colors"
               onClick={handleTwitterLogin}
@@ -253,12 +253,12 @@ const LoginModal = ({ isOpen, onClose, onRegisterClick, onLoginSuccess }: LoginM
           </div>
           
           {errorMessage && (
-            <div className="bg-red-500/10 text-red-500 p-2 rounded-md text-xs">
+            <div className="bg-red-500/10 text-red-500 p-2 rounded-md text-xs mb-2">
               {errorMessage}
             </div>
           )}
 
-          <div className="flex items-center my-2">
+          <div className="flex items-center mb-2">
             <Separator className="flex-grow" />
             <span className="mx-2 text-light-muted text-xs">veya e-posta ile giriş yap</span>
             <Separator className="flex-grow" />
