@@ -95,36 +95,32 @@ const Footer = () => {
             <h4 className="font-poppins font-semibold text-lg mb-4">Destek</h4>
             <ul className="space-y-2">
               <li>
-                <a
-                  href="#"
-                  className="text-light-muted hover:text-light transition-colors"
-                >
-                  Sıkça Sorulan Sorular
-                </a>
+                <Link href="/sikca-sorulan-sorular">
+                  <span className="text-light-muted hover:text-light transition-colors cursor-pointer block">
+                    Sıkça Sorulan Sorular
+                  </span>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
-                  className="text-light-muted hover:text-light transition-colors"
-                >
-                  Yardım Merkezi
-                </a>
+                <Link href="/yardim-merkezi">
+                  <span className="text-light-muted hover:text-light transition-colors cursor-pointer block">
+                    Yardım Merkezi
+                  </span>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
-                  className="text-light-muted hover:text-light transition-colors"
-                >
-                  İletişim
-                </a>
+                <Link href="/iletisim">
+                  <span className="text-light-muted hover:text-light transition-colors cursor-pointer block">
+                    İletişim
+                  </span>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
-                  className="text-light-muted hover:text-light transition-colors"
-                >
-                  Geri Bildirim
-                </a>
+                <Link href="/geri-bildirim">
+                  <span className="text-light-muted hover:text-light transition-colors cursor-pointer block">
+                    Geri Bildirim
+                  </span>
+                </Link>
               </li>
             </ul>
           </div>
@@ -133,36 +129,32 @@ const Footer = () => {
             <h4 className="font-poppins font-semibold text-lg mb-4">Yasal</h4>
             <ul className="space-y-2">
               <li>
-                <a
-                  href="#"
-                  className="text-light-muted hover:text-light transition-colors"
-                >
-                  Kullanım Şartları
-                </a>
+                <Link href="/kullanim-sartlari">
+                  <span className="text-light-muted hover:text-light transition-colors cursor-pointer block">
+                    Kullanım Şartları
+                  </span>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
-                  className="text-light-muted hover:text-light transition-colors"
-                >
-                  Gizlilik Politikası
-                </a>
+                <Link href="/gizlilik-politikasi">
+                  <span className="text-light-muted hover:text-light transition-colors cursor-pointer block">
+                    Gizlilik Politikası
+                  </span>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
-                  className="text-light-muted hover:text-light transition-colors"
-                >
-                  Çerez Politikası
-                </a>
+                <Link href="/cerez-politikasi">
+                  <span className="text-light-muted hover:text-light transition-colors cursor-pointer block">
+                    Çerez Politikası
+                  </span>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
-                  className="text-light-muted hover:text-light transition-colors"
-                >
-                  Telif Hakkı
-                </a>
+                <Link href="/telif-hakki">
+                  <span className="text-light-muted hover:text-light transition-colors cursor-pointer block">
+                    Telif Hakkı
+                  </span>
+                </Link>
               </li>
             </ul>
           </div>
