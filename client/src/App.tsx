@@ -36,9 +36,7 @@ function App() {
 
 // Routes component wrapped within App, so useAuth hook works properly
 function AppRoutes() {
-  // Temporarily using mock data for development
-  const user = { id: 1, username: "Test", points: 100, isAdmin: true }; 
-  const isAdmin = true;
+  const { user, isAdmin } = useAuth();
 
   return (
     <Switch>

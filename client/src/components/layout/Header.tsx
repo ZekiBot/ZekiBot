@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "wouter";
-// import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/context/AuthContext";
 import LoginModal from "@/components/auth/LoginModal";
 import RegisterModal from "@/components/auth/RegisterModal";
 import {
@@ -12,18 +12,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { User, LogOut, Settings, History, Code, Image, MessageSquare, Gamepad2, List } from "lucide-react";
 
-// Mock auth data for development - remove in production
-const mockAuth = {
-  isAuthenticated: true,
-  user: { username: "Test", isAdmin: true },
-  logout: () => console.log("Logout clicked"),
-  isAdmin: true,
-  points: 100
-};
-
 const Header = () => {
-  // Temporary development mock - remove in production
-  const { isAuthenticated, user, logout, isAdmin, points } = mockAuth;
+  const { isAuthenticated, user, logout, isAdmin, points } = useAuth();
   
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);

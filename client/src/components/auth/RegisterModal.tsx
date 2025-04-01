@@ -5,8 +5,10 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
-// import { useAuth } from "@/hooks/useAuth";
-import { X, Loader2 } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { X, Loader2, Facebook, Twitter, Github } from "lucide-react";
+import { FcGoogle } from "react-icons/fc";
+import { FaApple } from "react-icons/fa";
 
 interface RegisterModalProps {
   isOpen: boolean;
@@ -15,17 +17,13 @@ interface RegisterModalProps {
 }
 
 const RegisterModal = ({ isOpen, onClose, onLoginClick }: RegisterModalProps) => {
+  const { register, isRegistering } = useAuth();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [passwordError, setPasswordError] = useState("");
-  // Mock for development - remove in production
-  const register = (credentials: { username: string; email: string; password: string }) => {
-    console.log("Register with:", credentials);
-  };
-  const isRegistering = false;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -56,11 +54,37 @@ const RegisterModal = ({ isOpen, onClose, onLoginClick }: RegisterModalProps) =>
 
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
-            <Button className="flex items-center justify-center bg-[#DB4437] text-white py-3 rounded-lg hover:bg-opacity-90 transition-colors">
-              <i className="fab fa-google mr-2"></i> Google
+            <Button 
+              className="flex items-center justify-center bg-white text-black py-3 rounded-lg hover:bg-opacity-90 transition-colors"
+              onClick={() => console.log("Google signup")}
+            >
+              <FcGoogle className="mr-2 h-5 w-5" /> Google
             </Button>
-            <Button className="flex items-center justify-center bg-[#4267B2] text-white py-3 rounded-lg hover:bg-opacity-90 transition-colors">
-              <i className="fab fa-facebook-f mr-2"></i> Facebook
+            <Button 
+              className="flex items-center justify-center bg-[#4267B2] text-white py-3 rounded-lg hover:bg-opacity-90 transition-colors"
+              onClick={() => console.log("Facebook signup")}
+            >
+              <Facebook className="mr-2 h-4 w-4" /> Facebook
+            </Button>
+          </div>
+          <div className="grid grid-cols-3 gap-3">
+            <Button 
+              className="flex items-center justify-center bg-[#1DA1F2] text-white py-3 rounded-lg hover:bg-opacity-90 transition-colors"
+              onClick={() => console.log("Twitter signup")}
+            >
+              <Twitter className="mr-2 h-4 w-4" />
+            </Button>
+            <Button 
+              className="flex items-center justify-center bg-[#24292e] text-white py-3 rounded-lg hover:bg-opacity-90 transition-colors"
+              onClick={() => console.log("GitHub signup")}
+            >
+              <Github className="mr-2 h-4 w-4" />
+            </Button>
+            <Button 
+              className="flex items-center justify-center bg-black text-white py-3 rounded-lg hover:bg-opacity-90 transition-colors"
+              onClick={() => console.log("Apple signup")}
+            >
+              <FaApple className="mr-2 h-4 w-4" />
             </Button>
           </div>
 

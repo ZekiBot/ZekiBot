@@ -5,8 +5,9 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
-// import { useAuth } from "@/hooks/useAuth";
-import { X, Loader2 } from "lucide-react";
+import { X, Loader2, Facebook, Twitter, Github } from "lucide-react";
+import { FcGoogle } from "react-icons/fc";
+import { FaApple, FaMicrosoft } from "react-icons/fa";
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -18,11 +19,18 @@ const LoginModal = ({ isOpen, onClose, onRegisterClick }: LoginModalProps) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
-  // Mock for development - remove in production
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+  
+  // Mock login function for demonstration
   const login = (credentials: { email: string; password: string }) => {
+    setIsLoggingIn(true);
     console.log("Login with:", credentials);
+    // Simulating API call
+    setTimeout(() => {
+      setIsLoggingIn(false);
+      onClose();
+    }, 1500);
   };
-  const isLoggingIn = false;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,11 +51,37 @@ const LoginModal = ({ isOpen, onClose, onRegisterClick }: LoginModalProps) => {
 
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
-            <Button className="flex items-center justify-center bg-[#DB4437] text-white py-3 rounded-lg hover:bg-opacity-90 transition-colors">
-              <i className="fab fa-google mr-2"></i> Google
+            <Button 
+              className="flex items-center justify-center bg-white text-black py-3 rounded-lg hover:bg-opacity-90 transition-colors"
+              onClick={() => console.log("Google login")}
+            >
+              <FcGoogle className="mr-2 h-5 w-5" /> Google
             </Button>
-            <Button className="flex items-center justify-center bg-[#4267B2] text-white py-3 rounded-lg hover:bg-opacity-90 transition-colors">
-              <i className="fab fa-facebook-f mr-2"></i> Facebook
+            <Button 
+              className="flex items-center justify-center bg-[#4267B2] text-white py-3 rounded-lg hover:bg-opacity-90 transition-colors"
+              onClick={() => console.log("Facebook login")}
+            >
+              <Facebook className="mr-2 h-4 w-4" /> Facebook
+            </Button>
+          </div>
+          <div className="grid grid-cols-3 gap-3">
+            <Button 
+              className="flex items-center justify-center bg-[#1DA1F2] text-white py-3 rounded-lg hover:bg-opacity-90 transition-colors"
+              onClick={() => console.log("Twitter login")}
+            >
+              <Twitter className="mr-2 h-4 w-4" />
+            </Button>
+            <Button 
+              className="flex items-center justify-center bg-[#24292e] text-white py-3 rounded-lg hover:bg-opacity-90 transition-colors"
+              onClick={() => console.log("GitHub login")}
+            >
+              <Github className="mr-2 h-4 w-4" />
+            </Button>
+            <Button 
+              className="flex items-center justify-center bg-black text-white py-3 rounded-lg hover:bg-opacity-90 transition-colors"
+              onClick={() => console.log("Apple login")}
+            >
+              <FaApple className="mr-2 h-4 w-4" />
             </Button>
           </div>
 
