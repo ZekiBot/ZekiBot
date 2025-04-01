@@ -16,5 +16,5 @@ export default defineConfig({
     emptyOutDir: true,
   },
   // GitHub Pages için baz yolunu ayarlayın (repo adınıza göre)
-  base: '/zekibot/'
+  base: '/'
 });
