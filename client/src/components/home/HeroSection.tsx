@@ -99,9 +99,9 @@ const HeroSection = () => {
                   <div className="mt-6 relative">
                     <input
                       type="text"
-                      className="w-full bg-dark-lighter border border-dark-lighter focus:border-primary rounded-lg px-4 py-3 pr-12 text-black"
+                      className="w-full bg-dark-lighter border border-dark-lighter focus:border-primary rounded-lg px-4 py-3 pr-12 text-white"
                       placeholder="Mesajınızı yazın..."
-                      style={{color: "black", fontWeight: "500"}}
+                      style={{color: "white", fontWeight: "500"}}
                     />
                     <button className="absolute right-3 top-1/2 transform -translate-y-1/2 text-primary hover:text-primary-dark">
                       <SendHorizontal className="h-5 w-5" />
