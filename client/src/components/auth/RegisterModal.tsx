@@ -52,161 +52,159 @@ const RegisterModal = ({ isOpen, onClose, onLoginClick }: RegisterModalProps) =>
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-dark-surface rounded-xl shadow-2xl max-w-md w-full p-6 mx-4 border border-dark-lighter">
-        <div className="flex justify-between items-center mb-6">
-          <DialogHeader>
-            <DialogTitle className="text-2xl font-poppins font-bold text-light">Kayıt Ol</DialogTitle>
+      <DialogContent className="bg-dark-surface rounded-xl shadow-2xl max-w-sm sm:max-w-md w-full p-4 sm:p-5 mx-2 border border-dark-lighter">
+        <div className="flex justify-between items-center mb-4">
+          <DialogHeader className="p-0">
+            <DialogTitle className="text-xl sm:text-2xl font-poppins font-bold text-light">Kayıt Ol</DialogTitle>
           </DialogHeader>
-          <Button variant="ghost" size="icon" onClick={onClose} className="text-light-muted hover:text-light">
+          <Button variant="ghost" size="icon" onClick={onClose} className="text-light-muted hover:text-light h-8 w-8">
             <X className="h-4 w-4" />
           </Button>
         </div>
 
-        <div className="space-y-4">
-          <div className="grid grid-cols-2 gap-3">
+        <div className="space-y-3">
+          <div className="grid grid-cols-2 gap-2">
             <Button 
-              className="flex items-center justify-center bg-white text-black py-3 rounded-lg hover:bg-opacity-90 transition-colors"
+              className="flex items-center justify-center bg-white text-black py-2 px-3 rounded-lg hover:bg-opacity-90 transition-colors text-sm"
               onClick={() => console.log("Google signup")}
             >
-              <FcGoogle className="mr-2 h-5 w-5" /> Google
+              <FcGoogle className="mr-1 h-4 w-4" /> Google
             </Button>
             <Button 
-              className="flex items-center justify-center bg-[#4267B2] text-white py-3 rounded-lg hover:bg-opacity-90 transition-colors"
+              className="flex items-center justify-center bg-[#4267B2] text-white py-2 px-3 rounded-lg hover:bg-opacity-90 transition-colors text-sm"
               onClick={() => console.log("Facebook signup")}
             >
-              <Facebook className="mr-2 h-4 w-4" /> Facebook
+              <Facebook className="mr-1 h-4 w-4" /> Facebook
             </Button>
           </div>
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-3 gap-2">
             <Button 
-              className="flex items-center justify-center bg-[#1DA1F2] text-white py-3 rounded-lg hover:bg-opacity-90 transition-colors"
+              className="flex items-center justify-center bg-[#1DA1F2] text-white py-2 rounded-lg hover:bg-opacity-90 transition-colors"
               onClick={() => console.log("Twitter signup")}
             >
-              <Twitter className="mr-2 h-4 w-4" />
+              <Twitter className="h-4 w-4" />
             </Button>
             <Button 
-              className="flex items-center justify-center bg-[#24292e] text-white py-3 rounded-lg hover:bg-opacity-90 transition-colors"
+              className="flex items-center justify-center bg-[#24292e] text-white py-2 rounded-lg hover:bg-opacity-90 transition-colors"
               onClick={() => console.log("GitHub signup")}
             >
-              <Github className="mr-2 h-4 w-4" />
+              <Github className="h-4 w-4" />
             </Button>
             <Button 
-              className="flex items-center justify-center bg-black text-white py-3 rounded-lg hover:bg-opacity-90 transition-colors"
+              className="flex items-center justify-center bg-black text-white py-2 rounded-lg hover:bg-opacity-90 transition-colors"
               onClick={() => console.log("Apple signup")}
             >
-              <FaApple className="mr-2 h-4 w-4" />
+              <FaApple className="h-4 w-4" />
             </Button>
           </div>
 
-          <div className="flex items-center my-4">
+          <div className="flex items-center my-2">
             <Separator className="flex-grow" />
-            <span className="mx-4 text-light-muted text-sm">veya e-posta ile kayıt ol</span>
+            <span className="mx-2 text-light-muted text-xs">veya e-posta ile kayıt ol</span>
             <Separator className="flex-grow" />
           </div>
 
-          <form onSubmit={handleSubmit}>
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="username" className="text-light-muted text-sm">Kullanıcı Adı</Label>
-                <Input
-                  type="text"
-                  id="username"
-                  className="w-full bg-dark-lighter border border-dark-lighter focus:border-primary rounded-lg px-4 py-3 text-light"
-                  placeholder="kullaniciadi"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  required
-                />
-              </div>
-              <div>
-                <Label htmlFor="register-email" className="text-light-muted text-sm">E-posta Adresi</Label>
-                <Input
-                  type="email"
-                  id="register-email"
-                  className="w-full bg-dark-lighter border border-dark-lighter focus:border-primary rounded-lg px-4 py-3 text-light"
-                  placeholder="ornek@email.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </div>
-              <div>
-                <Label htmlFor="register-password" className="text-light-muted text-sm">Şifre</Label>
-                <Input
-                  type="password"
-                  id="register-password"
-                  className="w-full bg-dark-lighter border border-dark-lighter focus:border-primary rounded-lg px-4 py-3 text-light"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => {
-                    setPassword(e.target.value);
-                    setPasswordError("");
-                  }}
-                  required
-                />
-              </div>
-              <div>
-                <Label htmlFor="confirm-password" className="text-light-muted text-sm">Şifre Tekrar</Label>
-                <Input
-                  type="password"
-                  id="confirm-password"
-                  className={`w-full bg-dark-lighter border ${passwordError ? 'border-red-500' : 'border-dark-lighter'} focus:border-primary rounded-lg px-4 py-3 text-light`}
-                  placeholder="••••••••"
-                  value={confirmPassword}
-                  onChange={(e) => {
-                    setConfirmPassword(e.target.value);
-                    setPasswordError("");
-                  }}
-                  required
-                />
-                {passwordError && (
-                  <p className="text-red-500 text-xs mt-1">{passwordError}</p>
-                )}
-              </div>
-              <div className="flex items-center">
-                <Checkbox
-                  id="terms"
-                  checked={termsAccepted}
-                  onCheckedChange={(checked) => setTermsAccepted(checked as boolean)}
-                  className="rounded text-primary focus:ring-primary"
-                  required
-                />
-                <Label htmlFor="terms" className="ml-2 text-sm text-light-muted">
-                  <span className="text-light-muted">
-                    <a href="#" className="text-primary hover:underline">Kullanım Şartları</a> ve{" "}
-                    <a href="#" className="text-primary hover:underline">Gizlilik Politikası</a>
-                    'nı kabul ediyorum
-                  </span>
-                </Label>
-              </div>
-              <Button
-                type="submit"
-                className="w-full bg-primary hover:bg-opacity-90 text-white font-medium py-3 rounded-lg"
-                disabled={isRegistering || !termsAccepted}
-              >
-                {isRegistering ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Kayıt Olunuyor...
-                  </>
-                ) : (
-                  "Kayıt Ol"
-                )}
-              </Button>
+          <form onSubmit={handleSubmit} className="space-y-3">
+            <div>
+              <Label htmlFor="username" className="text-light-muted text-xs">Kullanıcı Adı</Label>
+              <Input
+                type="text"
+                id="username"
+                className="w-full bg-dark-lighter border border-dark-lighter focus:border-primary rounded-lg px-3 py-2 text-light text-sm h-9"
+                placeholder="kullaniciadi"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <Label htmlFor="register-email" className="text-light-muted text-xs">E-posta Adresi</Label>
+              <Input
+                type="email"
+                id="register-email"
+                className="w-full bg-dark-lighter border border-dark-lighter focus:border-primary rounded-lg px-3 py-2 text-light text-sm h-9"
+                placeholder="ornek@email.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <Label htmlFor="register-password" className="text-light-muted text-xs">Şifre</Label>
+              <Input
+                type="password"
+                id="register-password"
+                className="w-full bg-dark-lighter border border-dark-lighter focus:border-primary rounded-lg px-3 py-2 text-light text-sm h-9"
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  setPasswordError("");
+                }}
+                required
+              />
+            </div>
+            <div>
+              <Label htmlFor="confirm-password" className="text-light-muted text-xs">Şifre Tekrar</Label>
+              <Input
+                type="password"
+                id="confirm-password"
+                className={`w-full bg-dark-lighter border ${passwordError ? 'border-red-500' : 'border-dark-lighter'} focus:border-primary rounded-lg px-3 py-2 text-light text-sm h-9`}
+                placeholder="••••••••"
+                value={confirmPassword}
+                onChange={(e) => {
+                  setConfirmPassword(e.target.value);
+                  setPasswordError("");
+                }}
+                required
+              />
+              {passwordError && (
+                <p className="text-red-500 text-xs mt-1">{passwordError}</p>
+              )}
+            </div>
+            <div className="flex items-center">
+              <Checkbox
+                id="terms"
+                checked={termsAccepted}
+                onCheckedChange={(checked) => setTermsAccepted(checked as boolean)}
+                className="rounded text-primary focus:ring-primary h-3 w-3"
+                required
+              />
+              <Label htmlFor="terms" className="ml-1 text-xs text-light-muted">
+                <span className="text-light-muted">
+                  <a href="#" className="text-primary hover:underline">Kullanım Şartları</a> ve{" "}
+                  <a href="#" className="text-primary hover:underline">Gizlilik Politikası</a>
+                  'nı kabul ediyorum
+                </span>
+              </Label>
+            </div>
+            <Button
+              type="submit"
+              className="w-full bg-primary hover:bg-opacity-90 text-white font-medium py-2 rounded-lg text-sm h-9"
+              disabled={isRegistering || !termsAccepted}
+            >
+              {isRegistering ? (
+                <>
+                  <Loader2 className="mr-1 h-3 w-3 animate-spin" /> Kayıt Olunuyor...
+                </>
+              ) : (
+                "Kayıt Ol"
+              )}
+            </Button>
+          
+            <div className="text-center pt-1">
+              <p className="text-light-muted text-xs">
+                Zaten hesabınız var mı?{" "}
+                <Button
+                  variant="link"
+                  className="text-primary hover:text-opacity-90 p-0 h-auto text-xs"
+                  onClick={onLoginClick}
+                >
+                  Giriş Yap
+                </Button>
+              </p>
             </div>
           </form>
-
-          <div className="text-center mt-4">
-            <p className="text-light-muted text-sm">
-              Zaten hesabınız var mı?{" "}
-              <Button
-                variant="link"
-                className="text-primary hover:text-opacity-90 p-0"
-                onClick={onLoginClick}
-              >
-                Giriş Yap
-              </Button>
-            </p>
-          </div>
         </div>
       </DialogContent>
     </Dialog>
