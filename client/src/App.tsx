@@ -1,9 +1,9 @@
 import { Switch, Route } from "wouter";
 import NotFound from "@/pages/not-found";
-import Home from "@/pages/home";
+import Home from "@/pages/Home";
 import AiChat from "@/pages/AiChat";
 import ImageGeneration from "@/pages/ImageGeneration";
-import Games from "@/pages/games";
+import Games from "@/pages/Games";
 import CodeAssistant from "@/pages/CodeAssistant";
 import Dashboard from "@/pages/Dashboard";
 import Admin from "@/pages/Admin";
