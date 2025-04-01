@@ -4,6 +4,7 @@ import { apiRequest } from '@/lib/queryClient';
 import { queryClient } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
 import { useLocation } from 'wouter';
+import { mockUser, mockTransactions } from '@/lib/staticData';
 
 // Firebase imports
 import { 
@@ -18,6 +19,12 @@ import {
   onAuthStateChange
 } from '@/lib/firebase';
 import { User as FirebaseUser } from 'firebase/auth';
+
+// Check if we're in static mode (GitHub Pages)
+const isStaticMode = () => {
+  return window.location.hostname.includes('github.io') || 
+         import.meta.env.VITE_STATIC_MODE === 'true';
+};
 
 // Define types
 export type User = {
@@ -66,8 +73,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const isAuthenticated = !!user;
   const [isAuthLoading, setIsAuthLoading] = useState(true);
 
-  // Listen for Firebase auth state changes
+  // Listen for Firebase auth state changes or use static mode
   useEffect(() => {
+    // If in static mode, set mock user and skip Firebase
+    if (isStaticMode()) {
+      setUser(mockUser);
+      setPoints(mockUser.points);
+      setIsAuthLoading(false);
+      return () => {}; // No cleanup needed
+    }
+
+    // Normal Firebase auth handling for non-static mode
     const unsubscribe = onAuthStateChange(async (firebaseUser) => {
       if (firebaseUser) {
         try {
@@ -112,11 +128,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Simplified mock query for points
   const isPointsLoading = false;
   const isTransactionsLoading = false;
-  const transactionsData: any[] = [];
+  const transactionsData = isStaticMode() ? mockTransactions : [];
 
-  // Register function using Firebase
+  // Register function using Firebase or static mode
   const register = useMutation({
     mutationFn: async (credentials: { username: string; email: string; password: string }) => {
+      // Handle static mode (GitHub Pages)
+      if (isStaticMode()) {
+        // Simulate registration in static mode
+        console.log("Static mode registration:", credentials);
+        
+        const userData: User = {
+          ...mockUser,
+          username: credentials.username,
+          email: credentials.email
+        };
+        
+        return userData;
+      }
+      
+      // Normal Firebase registration
       try {
         const firebaseUser = await registerWithEmailAndPassword(
           credentials.email,
@@ -147,6 +178,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
     onSuccess: (data) => {
       setUser(data);
+      setPoints(data.points);
       toast({
         title: "Başarılı!",
         description: "Hesabınız oluşturuldu ve giriş yapıldı.",
@@ -162,9 +194,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   });
 
-  // Login function using Firebase
+  // Login function using Firebase or static mode
   const login = useMutation({
     mutationFn: async (credentials: { email: string; password: string }) => {
+      // Handle static mode (GitHub Pages)
+      if (isStaticMode()) {
+        // Simulate login in static mode
+        console.log("Static mode login:", credentials);
+        
+        // Just return the mock user
+        return mockUser;
+      }
+      
+      // Normal Firebase login
       try {
         const firebaseUser = await loginWithEmailAndPassword(
           credentials.email,
@@ -194,6 +236,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
     onSuccess: (data) => {
       setUser(data);
+      setPoints(data.points);
       toast({
         title: "Başarılı!",
         description: "Giriş yapıldı.",
@@ -209,9 +252,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   });
 
-  // Logout function using Firebase
+  // Logout function using Firebase or static mode
   const logout = useMutation({
     mutationFn: async () => {
+      // Handle static mode (GitHub Pages)
+      if (isStaticMode()) {
+        // Simulate logout in static mode
+        console.log("Static mode logout");
+        return { success: true };
+      }
+      
+      // Normal Firebase logout
       try {
         await logoutUser();
         return { success: true };
@@ -222,6 +273,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
     onSuccess: () => {
       setUser(null);
+      setPoints(0);
       toast({
         title: "Çıkış Yapıldı",
         description: "Oturumunuz sonlandırıldı.",
