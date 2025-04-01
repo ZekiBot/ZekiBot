@@ -63,42 +63,42 @@ const RegisterModal = ({ isOpen, onClose, onLoginClick }: RegisterModalProps) =>
         </div>
 
         <div>
-          <div className="grid grid-cols-2 gap-2 mb-2">
+          <div className="grid grid-cols-2 gap-2 mb-1">
             <Button 
-              className="flex items-center justify-center bg-white text-black py-2 px-3 rounded-lg hover:bg-opacity-90 transition-colors text-sm"
+              className="flex items-center justify-center bg-white text-black py-1 px-3 rounded-lg hover:bg-opacity-90 transition-colors text-sm h-8"
               onClick={() => console.log("Google signup")}
             >
               <FcGoogle className="mr-1 h-4 w-4" /> Google
             </Button>
             <Button 
-              className="flex items-center justify-center bg-[#4267B2] text-white py-2 px-3 rounded-lg hover:bg-opacity-90 transition-colors text-sm"
+              className="flex items-center justify-center bg-[#4267B2] text-white py-1 px-3 rounded-lg hover:bg-opacity-90 transition-colors text-sm h-8"
               onClick={() => console.log("Facebook signup")}
             >
               <Facebook className="mr-1 h-4 w-4" /> Facebook
             </Button>
           </div>
-          <div className="grid grid-cols-3 gap-2 mb-2">
+          <div className="grid grid-cols-3 gap-2 mb-1">
             <Button 
-              className="flex items-center justify-center bg-[#1DA1F2] text-white py-2 rounded-lg hover:bg-opacity-90 transition-colors"
+              className="flex items-center justify-center bg-[#1DA1F2] text-white py-1 rounded-lg hover:bg-opacity-90 transition-colors h-8"
               onClick={() => console.log("Twitter signup")}
             >
               <Twitter className="h-4 w-4" />
             </Button>
             <Button 
-              className="flex items-center justify-center bg-[#24292e] text-white py-2 rounded-lg hover:bg-opacity-90 transition-colors"
+              className="flex items-center justify-center bg-[#24292e] text-white py-1 rounded-lg hover:bg-opacity-90 transition-colors h-8"
               onClick={() => console.log("GitHub signup")}
             >
               <Github className="h-4 w-4" />
             </Button>
             <Button 
-              className="flex items-center justify-center bg-black text-white py-2 rounded-lg hover:bg-opacity-90 transition-colors"
+              className="flex items-center justify-center bg-black text-white py-1 rounded-lg hover:bg-opacity-90 transition-colors h-8"
               onClick={() => console.log("Apple signup")}
             >
               <FaApple className="h-4 w-4" />
             </Button>
           </div>
 
-          <div className="flex items-center mb-2">
+          <div className="flex items-center my-1">
             <Separator className="flex-grow" />
             <span className="mx-2 text-light-muted text-xs">veya e-posta ile kayıt ol</span>
             <Separator className="flex-grow" />
