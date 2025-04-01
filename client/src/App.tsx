@@ -18,7 +18,6 @@ import HelpCenter from "./pages/HelpCenter";
 import Feedback from "./pages/Feedback";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import { useAuth } from "@/context/AuthContext";
 import { Toaster } from "@/components/ui/toaster";
 
 function App() {
@@ -34,9 +33,11 @@ function App() {
   );
 }
 
-// Routes component wrapped within App, so useAuth hook works properly
+// Routes component wrapped within App
 function AppRoutes() {
-  const { user, isAdmin } = useAuth();
+  // Geçici olarak kaldırıldı
+  const user = false;
+  const isAdmin = false;
 
   return (
     <Switch>

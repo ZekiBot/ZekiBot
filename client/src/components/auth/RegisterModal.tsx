@@ -5,7 +5,6 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
-import { useAuth } from "@/hooks/useAuth";
 import { X, Loader2, Facebook, Twitter, Github } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 import { FaApple } from "react-icons/fa";
@@ -17,13 +16,24 @@ interface RegisterModalProps {
 }
 
 const RegisterModal = ({ isOpen, onClose, onLoginClick }: RegisterModalProps) => {
-  const { register, isRegistering } = useAuth();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [passwordError, setPasswordError] = useState("");
+  const [isRegistering, setIsRegistering] = useState(false);
+  
+  // Mock register function for demonstration
+  const register = (credentials: { username: string; email: string; password: string }) => {
+    setIsRegistering(true);
+    console.log("Register with:", credentials);
+    // Simulating API call
+    setTimeout(() => {
+      setIsRegistering(false);
+      onClose();
+    }, 1500);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

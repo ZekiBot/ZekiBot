@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Link } from "wouter";
-import { useAuth } from "@/context/AuthContext";
 import LoginModal from "@/components/auth/LoginModal";
 import RegisterModal from "@/components/auth/RegisterModal";
 import {
@@ -13,7 +12,16 @@ import { Button } from "@/components/ui/button";
 import { User, LogOut, Settings, History, Code, Image, MessageSquare, Gamepad2, List } from "lucide-react";
 
 const Header = () => {
-  const { isAuthenticated, user, logout, isAdmin, points } = useAuth();
+  // Auth state for development
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState<{username: string} | null>(null);
+  const isAdmin = false;
+  const points = 100;
+  const logout = () => {
+    setUser(null);
+    setIsAuthenticated(false);
+    console.log("Logging out...");
+  };
   
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
@@ -224,6 +232,10 @@ const Header = () => {
         onRegisterClick={() => {
           setIsLoginModalOpen(false);
           setIsRegisterModalOpen(true);
+        }}
+        onLoginSuccess={(userData) => {
+          setUser(userData);
+          setIsAuthenticated(true);
         }}
       />
 

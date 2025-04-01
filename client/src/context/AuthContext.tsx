@@ -5,14 +5,19 @@ import { queryClient } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
 import { useLocation } from 'wouter';
 
-// Mock User Data - Remove this in production
-const MOCK_USER = {
-  id: 1,
-  username: "testuser",
-  email: "test@example.com",
-  points: 100,
-  isAdmin: true
-};
+// Firebase imports
+import { 
+  registerWithEmailAndPassword,
+  loginWithEmailAndPassword,
+  logoutUser,
+  signInWithGoogle,
+  signInWithFacebook,
+  signInWithTwitter,
+  signInWithGithub,
+  signInWithApple,
+  onAuthStateChange
+} from '@/lib/firebase';
+import { User as FirebaseUser } from 'firebase/auth';
 
 // Define types
 export type User = {
@@ -21,6 +26,8 @@ export type User = {
   email: string;
   points: number;
   isAdmin: boolean;
+  uid?: string; // Firebase UID
+  photoURL?: string; // Profile photo from Firebase
 };
 
 export type AuthContextType = {
@@ -57,43 +64,86 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Derived state
   const isAdmin = user?.isAdmin || false;
   const isAuthenticated = !!user;
+  const [isAuthLoading, setIsAuthLoading] = useState(true);
 
-  // For development, set a mock user - Remove in production
+  // Listen for Firebase auth state changes
   useEffect(() => {
-    // Comment this out when API is ready
-    setUser(MOCK_USER);
-    setPoints(MOCK_USER.points);
+    const unsubscribe = onAuthStateChange(async (firebaseUser) => {
+      if (firebaseUser) {
+        try {
+          // API çağrısı ve kullanıcı verilerini alma
+          // Gerçek uygulamada, Firebase kullanıcı kimliğini kullanarak veritabanından kullanıcı bilgilerini alın
+          // Şimdilik mock veri kullanıyoruz
+          const userData: User = {
+            id: 1, // veritabanı ID'si
+            username: firebaseUser.displayName || 'Kullanıcı',
+            email: firebaseUser.email || '',
+            points: 100, // Kullanıcı puanları API'den alınmalı
+            isAdmin: false, // Admin durumu API'den alınmalı
+            uid: firebaseUser.uid,
+            photoURL: firebaseUser.photoURL || undefined
+          };
+          
+          setUser(userData);
+          setPoints(userData.points);
+          
+          // Puanlar ve işlemler API'den getirilmeli
+          
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+          toast({
+            title: "Hata",
+            description: "Kullanıcı bilgileri alınamadı.",
+            variant: "destructive",
+          });
+        }
+      } else {
+        // Kullanıcı çıkış yaptı veya oturum açmadı
+        setUser(null);
+        setPoints(0);
+      }
+      setIsAuthLoading(false);
+    });
+
+    // Cleanup on unmount
+    return () => unsubscribe();
   }, []);
-
-  // Auth status query - comment this in when API is ready
-  /*
-  const { data: authData, isLoading: isAuthLoading } = useQuery<User | null>({
-    queryKey: ['/api/auth/status'],
-    retry: false,
-    initialData: null
-  });
-
-  // Update user from auth status
-  useEffect(() => {
-    if (authData) {
-      setUser(authData as User);
-      setPoints(authData.points);
-    }
-  }, [authData]);
-  */
-  const isAuthLoading = false; // Mock for now
 
   // Simplified mock query for points
   const isPointsLoading = false;
   const isTransactionsLoading = false;
   const transactionsData: any[] = [];
 
-  // Simplified register function
+  // Register function using Firebase
   const register = useMutation({
     mutationFn: async (credentials: { username: string; email: string; password: string }) => {
-      // Mock implementation
-      console.log("Register called with:", credentials);
-      return MOCK_USER;
+      try {
+        const firebaseUser = await registerWithEmailAndPassword(
+          credentials.email,
+          credentials.password,
+          credentials.username
+        );
+        
+        // Gerçek uygulamada, burası bir API çağrısı ile kullanıcıyı veritabanına kaydetmeli
+        const userData: User = {
+          id: 1, // Veritabanı ID'si
+          username: credentials.username,
+          email: credentials.email,
+          points: 100, // Başlangıç puanları
+          isAdmin: false,
+          uid: firebaseUser.uid,
+          photoURL: firebaseUser.photoURL || undefined
+        };
+        
+        return userData;
+      } catch (error: any) {
+        console.error("Firebase register error:", error);
+        throw new Error(
+          error.code === "auth/email-already-in-use"
+            ? "Bu e-posta adresi zaten kullanılıyor."
+            : error.message || "Kayıt sırasında bir hata oluştu."
+        );
+      }
     },
     onSuccess: (data) => {
       setUser(data);
@@ -112,12 +162,35 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   });
 
-  // Simplified login function
+  // Login function using Firebase
   const login = useMutation({
     mutationFn: async (credentials: { email: string; password: string }) => {
-      // Mock implementation
-      console.log("Login called with:", credentials);
-      return MOCK_USER;
+      try {
+        const firebaseUser = await loginWithEmailAndPassword(
+          credentials.email,
+          credentials.password
+        );
+        
+        // Gerçek uygulamada, bu kullanıcı bilgileri API'den alınmalı
+        const userData: User = {
+          id: 1, // Veritabanı ID'si
+          username: firebaseUser.displayName || 'Kullanıcı',
+          email: firebaseUser.email || '',
+          points: 100, // API'den alınmalı
+          isAdmin: false, // API'den alınmalı
+          uid: firebaseUser.uid,
+          photoURL: firebaseUser.photoURL || undefined
+        };
+        
+        return userData;
+      } catch (error: any) {
+        console.error("Firebase login error:", error);
+        throw new Error(
+          error.code === "auth/invalid-credential"
+            ? "Geçersiz e-posta veya şifre."
+            : error.message || "Giriş sırasında bir hata oluştu."
+        );
+      }
     },
     onSuccess: (data) => {
       setUser(data);
@@ -136,12 +209,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   });
 
-  // Simplified logout function
+  // Logout function using Firebase
   const logout = useMutation({
     mutationFn: async () => {
-      // Mock implementation
-      console.log("Logout called");
-      return { success: true };
+      try {
+        await logoutUser();
+        return { success: true };
+      } catch (error) {
+        console.error("Firebase logout error:", error);
+        throw error;
+      }
     },
     onSuccess: () => {
       setUser(null);
